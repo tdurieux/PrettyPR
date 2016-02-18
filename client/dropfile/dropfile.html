@@ -1,0 +1,38 @@
+
+<h1> Bienvenue sur PrettyPr</h1>
+
+<h2> Pour commencer, vous pouvez drop 2 fichier à différencier dans chaque
+dropzone </h2>
+
+<div flex>
+    <div ngf-drop ngf-select
+         ngf-change="dropfile.addFile1($files)"
+         ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+         ngf-multiple="false" ngf-allow-dir="false" ngf-accept="'*/*'"
+         ngf-drop-available="true">
+
+      <div>Cliquer ici pour ajouter le 1er fichier</div>
+      <div>
+        <strong>OU</strong>
+      </div>
+      Vous pouvez aussi le dropper directement ici
+    </div>
+</div>
+
+<div flex>
+    <div ngf-drop ngf-select
+         ngf-change="dropfile.addFile2($files)"
+         ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+         ngf-multiple="false" ngf-allow-dir="false" ngf-accept="'*/*'"
+         ngf-drop-available="true">
+
+       <div>Cliquer ici pour ajouter le 2ième fihier</div>
+       <div>
+         <strong>OU</strong>
+       </div>
+       Vous pouvez aussi le dropper directement ici
+     </div>
+</div>
+
+
+<md-button class="md-raised" ng-click="dropfile.traiterFichier()"> Traiter les fichiers </md-button>
