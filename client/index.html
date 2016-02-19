@@ -1,11 +1,70 @@
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="/">
+
+	<title>PrettyPr</title>
+
 </head>
 
-<body>
-  <div ng-app="prettyPr" ng-strict-di="">
+<body ng-app="prettyPr" ng-controller="MasterCtrl">
+  <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
 
-    <div ui-view=""></div>
-  </div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar">
+        <li class="sidebar-main">
+          <a ng-click="toggleSidebar()">
+            Dashboard
+            <span class="menu-icon glyphicon glyphicon-transfer"></span>
+          </a>
+        </li>
+        <li class="sidebar-title"><span>NAVIGATION</span></li>
+        <li class="sidebar-list">
+          <a href="/dropfile">Fichier <span class="menu-icon fa fa-file-code-o"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="/github">Github <span class="menu-icon fa fa-github"></span></a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="col-xs-6">
+          <a href="https://github.com/Oupsla/PrettyPR" target="_blank">
+            Github
+          </a>
+        </div>
+        <div class="col-xs-6">
+          <a href="https://github.com/Oupsla/PrettyPR/README.md" target="_blank">
+            A propos
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
 
+    <div id="content-wrapper">
+      <div class="page-content">
+
+        <!-- Header Bar -->
+        <div class="row header">
+          <div class="col-xs-12">
+
+            <div class="meta">
+              <div class="page">
+                Fichier
+              </div>
+              <div class="breadcrumb-links">
+                Accueil / Fichier
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Header Bar -->
+
+        <!-- this is where content will be injected -->
+        <div ui-view=""></div>
+
+      </div><!-- End Page Content -->
+    </div><!-- End Content Wrapper -->
+  </div><!-- End Page Wrapper -->
 </body>

@@ -2,5 +2,6 @@ angular.module('prettyPr', [
   'angular-meteor',
   'ui.router',
   'ngMaterial',
-  'ngFileUpload'
+  'ngFileUpload',
+  'ui.bootstrap'
 ]);

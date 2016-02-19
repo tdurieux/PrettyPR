@@ -4,6 +4,11 @@ angular.module('prettyPr').config(function ($urlRouterProvider, $stateProvider, 
     .state('dropfile', {
       url: '/dropfile',
       template: '<dropfile></dropfile>'
+    })
+    .state('github', {
+      url: '/github',
+      template: '<github></github>'
     });
+
   $urlRouterProvider.otherwise("/dropfile");
 });
