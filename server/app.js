@@ -1,5 +1,5 @@
 Meteor.methods({
-
+  
   traitementFichier: function (idFile1, idFile2) {
     var file = FileUploaded.findOne({ _id: idFile1});
 

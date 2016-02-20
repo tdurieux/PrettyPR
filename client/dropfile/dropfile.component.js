@@ -17,21 +17,31 @@ angular.module('prettyPr').directive('dropfile', function() {
     controllerAs: 'dropfile',
     controller: function($scope, $reactive) {
       $reactive(this).attach($scope);
-
-      var file1 = "";
-      var file2 = "";
-
       this.subscribe('FileUploaded');
+
+      this.test = true;
+
+      this.file1 = null;
+      this.file2 = null;
+
+      this.helpers({
+        showFile1: () => {
+          return this.getReactively('file1') == null;
+        },
+        showFile2: () => {
+          return this.getReactively('file2') == null;
+        }
+      });
 
       this.addFile1 = (files) => {
         if (files.length > 0) {
-          var yourFile = new FS.File(files[0]);
-          file1 = guid();
-          yourFile._id = file1;
-          console.log(yourFile);
-          FileUploaded.insert(yourFile, function (err, fileObj) {
+          this.file1 = new FS.File(files[0]);
+          this.file1._id = guid();
+
+          FileUploaded.insert(this.file1, function (err, fileObj) {
             if (err) {
                 console.log("there was an error", err);
+                this.file1 = null;
             }
           });
         }
@@ -39,23 +49,21 @@ angular.module('prettyPr').directive('dropfile', function() {
 
       this.addFile2 = (files) => {
         if (files.length > 0) {
-          var yourFile = new FS.File(files[0]);
-          file2 = guid();
-          yourFile._id = file2;
-          console.log(yourFile);
-          FileUploaded.insert(yourFile, function (err, fileObj) {
+          this.file2 = new FS.File(files[0]);
+          this.file2._id = guid();
+
+          FileUploaded.insert(this.file2, function (err, fileObj) {
             if (err) {
                 console.log("there was an error", err);
+                this.file2 = null;
             }
           });
         }
       };
 
       this.traiterFichier = () => {
-        console.log(file1);
-        console.log(file2);
-        if(file1 != "" && file2 != ""){
-            Meteor.call('traitementFichier', file1, file2);
+        if(this.file1 != null && this.file2 != null){
+            Meteor.call('traitementFichier', this.file1._id, this.file2._id);
         }
         else {
           console.log("Les 2 fichiers n'ont pas été envoyés !")
