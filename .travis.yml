@@ -30,8 +30,8 @@ cache:
     - "src/.meteor/local/mirrors"
 
 before_cache:
-  - rm -rf $HOME/build/xolvio/automated-testing-best-practices/.meteor/local/log
-  - rm -rf $HOME/build/xolvio/automated-testing-best-practices/.meteor/local/run
+  - rm -rf $HOME/build/PrettyPr/.meteor/local/log
+  - rm -rf $HOME/build/PrettyPr/.meteor/local/run
 
 before_install:
   # Download Meteor
