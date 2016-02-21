@@ -1,3 +1,3 @@
 test:
-	velocity test-package ./ --ci
+	velocity test-app --ci
 .PHONY: test
