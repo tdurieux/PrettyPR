@@ -32,3 +32,6 @@ twbs:bootstrap
 fortawesome:fontawesome
 themeteorchef:bert
 angular:angular-animate
+sanjo:jasmine
+velocity:html-reporter
+velocity:console-reporter
