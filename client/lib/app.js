@@ -3,5 +3,6 @@ angular.module('prettyPr', [
   'ui.router',
   'ngMaterial',
   'ngFileUpload',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngAnimate'
 ]);
