@@ -1,3 +1,3 @@
 test:
-	velocity test-app --ci
+	meteor --test
 .PHONY: test
