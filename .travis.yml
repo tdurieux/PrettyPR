@@ -65,7 +65,7 @@ before_install:
   # Create the results directory
   - mkdir -p $HOME/results/screenshots
 
-  - cd $HOME
+  - cd /home/travis/build/Oupsla/PrettyPR
 
 script:
   - velocity test-app --ci --raw-logs
