@@ -67,5 +67,7 @@ before_install:
 
   - cd /home/travis/build/Oupsla/PrettyPR
 
+  - meteor update
+
 script:
   - meteor --test
