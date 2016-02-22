@@ -68,4 +68,4 @@ before_install:
   - cd /home/travis/build/Oupsla/PrettyPR
 
 script:
-  - velocity test-app --ci --raw-logs
+  - meteor --test
