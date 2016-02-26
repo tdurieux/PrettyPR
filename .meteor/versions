@@ -8,6 +8,7 @@ angular:angular-aria@1.5.0
 angular:angular-material@1.0.5
 angularui:angular-ui-bootstrap@0.13.0
 angularui:angular-ui-router@0.2.15
+anti:gagarin@0.4.12
 autoupdate@1.2.4
 babel-compiler@5.8.24_1
 babel-runtime@0.1.4

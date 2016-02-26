@@ -35,3 +35,4 @@ angular:angular-animate
 sanjo:jasmine
 velocity:html-reporter
 velocity:console-reporter
+anti:gagarin@=0.4.12
