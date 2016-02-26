@@ -1,73 +1,9 @@
-sudo: false
-
 language: node_js
-
 node_js:
-  - 0.10.40
-
-env:
-  global:
-    - BROWSER=chrome
-    - SELENIUM_BROWSER=chrome
-    - CUCUMBER_SCREENSHOTS_DIR=$HOME/results/screenshots
-    - CUCUMBER_JSON_OUTPUT=$HOME/results/results.cucumber
-    - CUCUMBER_TAGS=~@ignore
-    - MONGO_URL=mongodb://localhost:27017/meteor-app
-    # - VELOCITY_DEBUG=1
-
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
-  artifacts:
-    s3_region: "us-east-1"
-    paths:
-    - .meteor/local/log
-    - $HOME/results
-
-cache:
-  directories:
-    - $HOME/.meteor
-    - $HOME/.npm
-    - $HOME/mongodb-linux-x86_64-2.6.4
-    - $HOME/test-packages
-    - .meteor/local
-
-before_cache:
-  - rm -f $HOME/.meteor/log/*.log
-
+  - "0.12"
 before_install:
-  # Download Meteor
-  - PATH=$PATH:$HOME/.meteor
-  - if [ ! -e $HOME/.meteor/meteor ]; then curl https://install.meteor.com | sh; fi
-
-  # Use X Virtual Frame Buffer
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1027x768x16"
-  - sleep 3 # give xvfb some time to start
-  - "export DISPLAY=:99.0"
-
-  # Install and start MongoDB 2.6
-  - export MONGO_PACKAGE=mongodb-linux-x86_64-2.6.4
-  - export MONGO_HOME=$HOME/$MONGO_PACKAGE
-  - if [[ ! -e $MONGO_HOME/bin/mongod ]]; then cd $HOME; wget http://downloads.mongodb.org/linux/$MONGO_PACKAGE.tgz && tar xvzf $HOME/$MONGO_PACKAGE.tgz; fi
-  - export PATH=$MONGO_HOME/bin:$PATH
-  - mkdir -p $HOME/data/db
-  - $MONGO_HOME/bin/mongod --dbpath $HOME/data/db > $HOME/mongo.log 2>&1 &
-
-  # Install NPM dependencies
-  - npm install -g velocity-cli
-
-  # Make sure Mongo has started
-  - until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
-
-  # Create the results directory
-  - mkdir -p $HOME/results/screenshots
-
-  - cd /home/travis/build/Oupsla/PrettyPR
-
-  - meteor update
-
-script:
-  - meteor --test
+  - "curl -L https://raw.githubusercontent.com/arunoda/travis-ci-laika/master/configure.sh | /bin/sh"
+services:
+  - mongodb
+env:
+  - LAIKA_OPTIONS="-t 5000"
