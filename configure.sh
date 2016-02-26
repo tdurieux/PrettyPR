@@ -1,10 +1,13 @@
 #!/bin/sh
 
 #configuring the system
-wget https://raw.githubusercontent.com/Oupsla/PrettyPR/master/Makefile
+wget https://raw.github.com/arunoda/travis-ci-laika/master/Makefile
 
 #install meteor
 curl https://install.meteor.com | /bin/sh
 
-#install velocity cli
-npm install -g velocity-cli
+#installing meteorite
+npm install -g meteorite
+
+#installing laika
+npm install -g laika
