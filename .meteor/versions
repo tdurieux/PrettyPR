@@ -1,3 +1,8 @@
+accounts-base@1.2.2
+accounts-github@1.0.6
+accounts-oauth@1.1.8
+accounts-ui@1.1.6
+accounts-ui-unstyled@1.1.8
 angular@1.3.6
 angular-meteor-data@0.2.0
 angular-templates@0.0.3
@@ -15,6 +20,7 @@ base64@1.0.4
 benjamine:jsondiffpatch@0.1.38_1
 binary-heap@1.0.4
 blaze@2.1.3
+blaze-html-templates@1.0.1
 blaze-tools@1.0.4
 boilerplate-generator@1.0.4
 caching-compiler@1.0.0
@@ -45,9 +51,11 @@ dburles:mongo-collection-instances@0.3.4
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.2
+ddp-rate-limiter@1.0.0
 ddp-server@1.2.2
 deps@1.0.9
 diff-sequence@1.0.1
+dotansimha:accounts-ui-angular@0.0.2
 ecmascript@0.1.6
 ecmascript-runtime@0.2.6
 ejson@1.0.7
@@ -56,6 +64,7 @@ fastclick@1.0.7
 fortawesome:fontawesome@4.5.0
 fourseven:scss@3.3.3_3
 geojson-utils@1.0.4
+github@1.1.4
 hot-code-push@1.0.0
 html-tools@1.0.5
 htmljs@1.0.5
@@ -66,9 +75,12 @@ lai:collection-extensions@0.1.4
 launch-screen@1.0.4
 less@2.5.1
 livedata@1.0.15
+localstorage@1.0.5
 logging@1.0.8
 meteor@1.1.10
 meteor-base@1.0.1
+meteorhacks:async@1.0.0
+meteorhacks:npm@1.5.0
 minifiers@1.1.7
 minimongo@1.0.10
 mobile-experience@1.0.1
@@ -76,7 +88,10 @@ mobile-status-bar@1.0.6
 mongo@1.1.3
 mongo-id@1.0.1
 mongo-livedata@1.0.9
+npm-container@1.2.0
 npm-mongo@1.4.39_1
+oauth@1.1.6
+oauth2@1.1.5
 observe-sequence@1.0.7
 ordered-dict@1.0.4
 pbastowski:angular-babel@1.0.9
@@ -84,11 +99,13 @@ planettraining:material-design-icons@2.1.1
 promise@0.5.1
 raix:eventemitter@0.1.3
 random@1.0.5
+rate-limit@1.0.0
 reactive-dict@1.1.3
 reactive-var@1.0.6
 reload@1.1.4
 retry@1.0.4
 routepolicy@1.0.6
+service-configuration@1.0.5
 session@1.1.1
 spacebars@1.0.7
 spacebars-compiler@1.0.7

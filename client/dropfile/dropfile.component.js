@@ -65,8 +65,6 @@ angular.module('prettyPr').directive('dropfile', function() {
         if(this.file1 != null && this.file2 != null){
             Meteor.call('traitementFichier', this.file1._id, this.file2._id,
               function (error, result) {
-                console.log("Error : " + error);
-                console.log("Result : " + result);
                 if(error){
                   Bert.alert({
                     title: 'Erreur',

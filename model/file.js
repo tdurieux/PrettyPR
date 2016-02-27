@@ -26,4 +26,8 @@ if (Meteor.isServer) {
     return FileUploaded.find({});
   });
 
+  Meteor.publish('users', function(){
+    return Meteor.users.find({});
+  });
+
 }

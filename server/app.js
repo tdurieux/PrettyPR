@@ -37,7 +37,27 @@ Meteor.methods({
     });
 
 
+  },
+
+  getReposFromUser: function (username) {
+
+      var GithubApi = Meteor.npmRequire('github');
+      var github = new GithubApi({
+          version: "3.0.0"
+      });
+
+      var repos = Async.runSync(function(done) {
+        github.repos.getFromUser({
+            user: username
+        }, function(err, res) {
+            console.log(JSON.stringify(res));
+            done(null, res);
+        });
+      });
+
+      return repos.result;
   }
+
 
 
 });

@@ -4,5 +4,6 @@ angular.module('prettyPr', [
   'ngMaterial',
   'ngFileUpload',
   'ui.bootstrap',
-  'ngAnimate'
+  'ngAnimate',
+  'accounts.ui'
 ]);

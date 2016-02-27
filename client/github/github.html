@@ -1,3 +1,15 @@
-<div>
-  <p> Page pour github </p>
-</div>
+<div> Connection au service Github :  </div> <login-buttons></login-buttons> 
+
+
+<form>
+  <input type="submit" ng-click="github.getRepo()" value="Save" />
+</form>
+
+<p ng-hide="github.showRepos"> Test </p>
+
+<md-list ng-hide="github.showRepos">
+  <md-subheader class="md-no-sticky">Repos :</md-subheader>
+  <md-list-item ng-repeat="repo in github.reposUser">
+    <div>Repo name : {{ repo.url }}</div>
+  </md-list-item>
+</md-list>
