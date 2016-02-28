@@ -66,32 +66,14 @@ angular.module('prettyPr').directive('dropfile', function() {
             Meteor.call('traitementFichier', this.file1._id, this.file2._id,
               function (error, result) {
                 if(error){
-                  Bert.alert({
-                    title: 'Erreur',
-                    message: 'Erreur lors du traitement : ' + error,
-                    type: 'danger',
-                    style: 'growl-top-right',
-                    icon: 'fa-times'
-                  });
+                  bertError('Erreur lors du traitement : ' + error);
                 }else{
-                  Bert.alert({
-                    title: 'Info',
-                    message: 'Les fichiers ont été traités avec succès',
-                    type: 'info',
-                    style: 'growl-top-right',
-                    icon: 'fa-check-circle'
-                  });
+                  bertInfo('Les fichiers ont été traités avec succès');
                 }
               });
         }
         else {
-          Bert.alert({
-            title: 'Erreur',
-            message: 'Vous devez sélectionner 2 fichiers avant de pouvoir les traiter',
-            type: 'danger',
-            style: 'growl-top-right',
-            icon: 'fa-times'
-          });
+          bertError('Vous devez sélectionner 2 fichiers avant de pouvoir les traiter');
         }
       };
 

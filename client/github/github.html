@@ -1,15 +1,22 @@
-<div> Connection au service Github :  </div> <login-buttons></login-buttons> 
+<div> Connection au service Github :  </div> <login-buttons></login-buttons>
 
 
-<form>
-  <input type="submit" ng-click="github.getRepo()" value="Save" />
-</form>
 
-<p ng-hide="github.showRepos"> Test </p>
+<ul ng-hide="github.showRepos" >
+  <h3 class="md-no-sticky">Sélection du repository : </h3>
+  <li ng-repeat="repo in github.reposUser">
+    <input type="radio" ng-model="github.reposelected" value="{{ repo.name }}" name="repoRadio" >
+    {{ repo.name }}
+  </li>
+  <button type="button" class="btn btn-default" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
+</ul>
 
-<md-list ng-hide="github.showRepos">
-  <md-subheader class="md-no-sticky">Repos :</md-subheader>
-  <md-list-item ng-repeat="repo in github.reposUser">
-    <div>Repo name : {{ repo.url }}</div>
-  </md-list-item>
-</md-list>
+
+<ul ng-hide="github.showPr" >
+  <h3 class="md-no-sticky">Sélection de la pull request : </h3>
+  <li ng-repeat="pullRequest in github.pullRequests">
+    <input type="radio" ng-model="github.prselected" value="{{ pullRequest.name }}" name="prRadio" >
+    Titre : {{ pullRequest.title }} - Url : <a href="{{ pullRequest.html_url }}" target="_blank"> {{ pullRequest.html_url }} </a>
+  </li>
+  <button type="button" class="btn btn-default">Comparer cette Pull Request</button>
+</ul>

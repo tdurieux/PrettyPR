@@ -50,12 +50,32 @@ Meteor.methods({
         github.repos.getFromUser({
             user: username
         }, function(err, res) {
-            console.log(JSON.stringify(res));
             done(null, res);
         });
       });
 
       return repos.result;
+  },
+
+  getPullFromRepo: function (username, reponame) {
+
+    console.log("Récupération du répo " + reponame + " de l'utilisateur : " + username);
+
+    var GithubApi = Meteor.npmRequire('github');
+    var github = new GithubApi({
+        version: "3.0.0"
+    });
+
+    var pullRequests = Async.runSync(function(done) {
+      github.pullRequests.getAll({
+          user: username,
+          repo: reponame
+      }, function(err, res) {
+          done(null, res);
+      });
+    });
+
+    return pullRequests.result;
   }
 
 
