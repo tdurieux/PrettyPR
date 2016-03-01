@@ -17,17 +17,22 @@
       <ul class="sidebar">
         <li class="sidebar-main">
           <a ng-click="toggleSidebar()">
-            Dashboard
+            Menu
             <span class="menu-icon glyphicon glyphicon-transfer"></span>
           </a>
         </li>
-        <li class="sidebar-title"><span>NAVIGATION</span></li>
-        <li class="sidebar-list">
+        <li class="sidebar-title"><span>Sources</span></li>
+        <li class="sidebar-list" ng-class="getClass('/dropfile')">
           <a href="/dropfile">Fichier <span class="menu-icon fa fa-file-code-o"></span></a>
         </li>
-        <li class="sidebar-list">
+        <li class="sidebar-list" ng-class="getClass('/github')">
           <a href="/github">Github <span class="menu-icon fa fa-github"></span></a>
         </li>
+        <li class="sidebar-title"><span>Résultats</span></li>
+        <li class="sidebar-list" ng-class="getClass('/results')">
+          <a href="/results">Résultats <span class="menu-icon fa fa-bar-chart"></span></a>
+        </li>
+
       </ul>
       <div class="sidebar-footer">
         <div class="col-xs-6">

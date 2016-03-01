@@ -1,7 +1,7 @@
-var FileUploadedFS = new FS.Store.FileSystem("fileUploaded");
+var FileUploadedFS = new FS.Store.FileSystem("fileUploaded", {path: Meteor.settings.public.meteor_env+"/prettyPrUpload"});
 
 FileUploaded = new FS.Collection('fileUploaded', {
-  stores: [FileUploadedFS ]
+ stores: [FileUploadedFS ]
 });
 
 if (Meteor.isServer) {

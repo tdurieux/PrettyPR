@@ -5,8 +5,21 @@ angular.module('prettyPr', [
   'ngFileUpload',
   'ui.bootstrap',
   'ngAnimate',
-  'accounts.ui'
-]);
+  'accounts.ui',
+  'angular-loading-bar'
+])
+.service('sharedProperties', function () {
+    var changement = null;
+
+    return {
+        getChangement: function () {
+            return changement;
+        },
+        setChangement: function(value) {
+            changement = value;
+        }
+    };
+});
 
 bertError = function bertError(message){
   Bert.alert({
