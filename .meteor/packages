@@ -27,7 +27,6 @@ angular:angular-material
 planettraining:material-design-icons
 danialfarid:ng-file-upload
 cfs:filesystem
-twbs:bootstrap
 fortawesome:fontawesome
 themeteorchef:bert
 angular:angular-animate
@@ -39,3 +38,4 @@ meteorhacks:npm
 
 npm-container
 manuel:reactivearray
+codelovers:angular-loading-bar

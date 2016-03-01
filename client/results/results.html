@@ -1,0 +1,8 @@
+<md-content ng-if="results.prettyPR" layout="column" flex>
+  <section ng-repeat="change in results.prettyPR.pullrequest.changes | orderBy:'location.type'">
+    <md-subheader class="md-no-sticky">{{change.location.type}}:
+        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <diff-class change="change"></diff-class>
+
+  </section>
+</md-content>
