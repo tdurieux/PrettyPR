@@ -63,9 +63,16 @@ Meteor.methods({
         github.repos.getFromUser({
             user: username
         }, function(err, res) {
-            done(null, res);
+            done(err, res);
         });
       });
+
+      if(repos.error != null){
+        if(repos.error.message.search("Not Found") != -1)
+          throw new Meteor.Error(400, "User not found");
+        else
+          throw new Meteor.Error(400, repos.error.message);
+      }
 
       return repos.result;
   },
@@ -84,9 +91,12 @@ Meteor.methods({
           user: username,
           repo: reponame
       }, function(err, res) {
-          done(null, res);
+          done(err, res);
       });
     });
+
+    if(pullRequests.error != null)
+        throw new Meteor.Error(400, repos.error.message);
 
     return pullRequests.result;
   }
