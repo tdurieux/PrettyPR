@@ -10,6 +10,8 @@ angular.module('prettyPr').directive('github', function() {
 
       this.repos = new ReactiveArray();
       this.pullRequests = new ReactiveArray();
+      this.otherAccount = null;
+      this.userselected = "mine";
       this.reposelected = null;
       this.prselected = null;
 
@@ -30,6 +32,10 @@ angular.module('prettyPr').directive('github', function() {
 
       this.getRepo = () => {
         var githubUsername = Meteor.user().services.github.username;
+
+        if(!githubUsername)
+          bertError("Vous n'êtes pas connecté à Github !");
+
         Meteor.call('getReposFromUser', githubUsername,
           function (error, result) {
               if(error){
@@ -37,6 +43,9 @@ angular.module('prettyPr').directive('github', function() {
               } else {
                 for (var i = 0; i < result.length; i++) {
                   this.repos.push(result[i]);
+                  if(i == 0){
+                    this.reposelected = result[i].name;
+                  }
                 }
                 bertInfo("Récupération de vos repos réussie !");
               }
@@ -45,6 +54,13 @@ angular.module('prettyPr').directive('github', function() {
 
       this.getPr = (reponame) => {
         var githubUsername = Meteor.user().services.github.username;
+
+        if(!reponame)
+          bertError("Vous n'avez pas sélectionné de repo !");
+
+        if(!githubUsername)
+          bertError("Vous n'êtes pas connecté à Github !");
+
         Meteor.call('getPullFromRepo', githubUsername, reponame,
           function (error, result) {
               if(error){
@@ -52,6 +68,9 @@ angular.module('prettyPr').directive('github', function() {
               } else {
                 for (var i = 0; i < result.length; i++) {
                   this.pullRequests.push(result[i]);
+                  if(i == 0){
+                    this.prselected = result[i].title;
+                  }
                 }
                 if(this.pullRequests.length == 0){
                   bertError("Il n'y a aucune pull requests sur ce repository !");
@@ -68,6 +87,13 @@ angular.module('prettyPr').directive('github', function() {
           this.getRepo();
         }
       }.bind(this));
+
+
+      /*TODO : tester la valeur du radio button pour le compte */
+      /*TODO : verifier que github api utiliser bien des requetes authentifié */
+      /*TODO : Rajouter un ng click sur le radio button 'Autre compte'
+      qui va forcer le focus sur l'input
+      De même quand on click sur l'input, forcer le radio button */
 
     }
   }

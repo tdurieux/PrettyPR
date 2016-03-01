@@ -78,6 +78,4 @@ Meteor.methods({
     return pullRequests.result;
   }
 
-
-
 });
