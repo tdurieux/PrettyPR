@@ -1,4 +1,27 @@
-angular.module('prettyPr').directive('github', function() {
+function validationUsername(selected, meteorAccount, otherAccount){
+
+  if(selected != "other" && selected != "mine"){
+    bertError("Aucune radiobox pour l'utilisateur sélectionnée !");
+    return null;
+  }
+
+  if(selected == "other"){
+    if(!otherAccount){
+      bertError("Veuillez rentrer un nom de compte !");
+      return null;
+    }
+    return otherAccount;
+  }else{
+    if(!meteorAccount){
+      bertError("Vous n'êtes pas connecté à Github !");
+      return null;
+    }
+    return meteorAccount;
+  }
+}
+
+angular.module('prettyPr')
+  .directive('github', function() {
   return {
     restrict: 'E',
     templateUrl: 'client/github/github.html',
@@ -31,16 +54,20 @@ angular.module('prettyPr').directive('github', function() {
       });
 
       this.getRepo = () => {
-        var githubUsername = Meteor.user().services.github.username;
-
+        var githubUsername = validationUsername(this.userselected,
+          Meteor.user().services.github.username, this.otherAccount);
         if(!githubUsername)
-          bertError("Vous n'êtes pas connecté à Github !");
+          return;
+
 
         Meteor.call('getReposFromUser', githubUsername,
           function (error, result) {
               if(error){
                 bertError("Erreur lors de la récupération de vos repos. Detail : " + error);
               } else {
+                //Remove old
+                this.repos.splice(0, this.repos.length);
+
                 for (var i = 0; i < result.length; i++) {
                   this.repos.push(result[i]);
                   if(i == 0){
@@ -53,19 +80,25 @@ angular.module('prettyPr').directive('github', function() {
       }
 
       this.getPr = (reponame) => {
-        var githubUsername = Meteor.user().services.github.username;
+
+        var githubUsername = validationUsername(this.userselected,
+          Meteor.user().services.github.username, this.otherAccount);
+
+        if(!githubUsername)
+          return;
 
         if(!reponame)
           bertError("Vous n'avez pas sélectionné de repo !");
 
-        if(!githubUsername)
-          bertError("Vous n'êtes pas connecté à Github !");
 
         Meteor.call('getPullFromRepo', githubUsername, reponame,
           function (error, result) {
               if(error){
                 bertError("Erreur lors de la récupération de vos pullRequests. Detail : " + error);
               } else {
+                //Remove old
+                this.pullRequests.splice(0, this.pullRequests.length);
+
                 for (var i = 0; i < result.length; i++) {
                   this.pullRequests.push(result[i]);
                   if(i == 0){
@@ -79,6 +112,7 @@ angular.module('prettyPr').directive('github', function() {
         }.bind(this));
       }
 
+
       //Le tracker va s'occuper d'appeler la méthode si la valeur de l'user change
       //Celle-ci change si l'user etait deja connecté auparavant à la fin du chargement
       //de la page
@@ -89,7 +123,7 @@ angular.module('prettyPr').directive('github', function() {
       }.bind(this));
 
 
-      /*TODO : tester la valeur du radio button pour le compte */
+
       /*TODO : verifier que github api utiliser bien des requetes authentifié */
       /*TODO : Rajouter un ng click sur le radio button 'Autre compte'
       qui va forcer le focus sur l'input

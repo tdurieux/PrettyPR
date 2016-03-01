@@ -7,12 +7,13 @@
 <md-radio-group ng-model="github.userselected" ng-required="true">
   <md-radio-button class="md-primary" value="mine" name="userselected">Mon compte</md-radio-button>
   <div layout="row" >
-    <md-radio-button style="margin-top: 10px;" class="md-primary" value="other" name="userselected"></md-radio-button>
+    <md-radio-button style="margin-top: 10px;" class="md-primary" value="other" name="userselected"  ></md-radio-button>
     <md-input-container>
       <label for="input_170">Autre compte</label>
       <input aria-invalid="false" id="input_170" class="ng-pristine ng-valid md-input ng-touched" ng-model="github.otherAccount">
     </md-input-container>
   </div>
+  <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getRepo()">Obtenir les repos</button>
 </md-radio-group>
 
 
@@ -26,7 +27,7 @@
     </md-list-item>
   </md-radio-group>
   <br/>
-  <button type="button" class="btn btn-default" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
+  <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
 </md-list>
 
 
@@ -40,5 +41,5 @@
     </md-list-item>
   </md-radio-group>
   <br/>
-  <button type="button" class="btn btn-default">Comparer cette Pull Request</button>
+  <button class="md-raised md-primary md-button md-ink-ripple" type="button">Comparer cette Pull Request</button>
 </md-list>
