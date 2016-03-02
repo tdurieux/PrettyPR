@@ -1,3 +1,20 @@
+var GithubApi = null;
+var github = null;
+
+function initGithubApi(){
+  GithubApi = Meteor.npmRequire('github');
+  github = new GithubApi({
+      version: "3.0.0"
+  });
+
+  /*github.authenticate({
+    type: "oauth",
+    key: "****",
+    secret: "****"
+  });*/
+
+}
+
 Meteor.methods({
 
   traitementFichier: function(idFile1, idFile2){
@@ -54,10 +71,8 @@ Meteor.methods({
 
   getReposFromUser: function (username) {
 
-      var GithubApi = Meteor.npmRequire('github');
-      var github = new GithubApi({
-          version: "3.0.0"
-      });
+      if(!github)
+        initGithubApi();
 
       var repos = Async.runSync(function(done) {
         github.repos.getFromUser({
@@ -79,12 +94,8 @@ Meteor.methods({
 
   getPullFromRepo: function (username, reponame) {
 
-    console.log("Récupération du répo " + reponame + " de l'utilisateur : " + username);
-
-    var GithubApi = Meteor.npmRequire('github');
-    var github = new GithubApi({
-        version: "3.0.0"
-    });
+    if(!github)
+      initGithubApi();
 
     var pullRequests = Async.runSync(function(done) {
       github.pullRequests.getAll({
