@@ -1,0 +1,44 @@
+<div> Connection au service Github :  </div> <login-buttons></login-buttons>
+
+<br/>
+<br/>
+
+
+<md-radio-group ng-model="github.userselected" ng-required="true">
+  <md-radio-button class="md-primary" value="mine" name="userselected">Mon compte</md-radio-button>
+  <div layout="row" >
+    <md-radio-button style="margin-top: 10px;" class="md-primary" value="other" name="userselected"></md-radio-button>
+    <md-input-container>
+      <label for="input_170">Autre compte</label>
+      <input aria-invalid="false" id="input_170" class="ng-pristine ng-valid md-input ng-touched" ng-model="github.otherAccount">
+    </md-input-container>
+  </div>
+</md-radio-group>
+
+
+<md-list role="list" ng-hide="github.showRepos" ng-required="true">
+  <h3 class="ng-binding">Sélection du repository : </h3>
+  <md-radio-group ng-model="github.reposelected">
+    <md-list-item ng-repeat="repo in github.reposUser" role="listitem">
+      <md-radio-button value="{{ repo.name }}" name="repoRadio">
+        {{ repo.name }}
+      </md-radio-button>
+    </md-list-item>
+  </md-radio-group>
+  <br/>
+  <button type="button" class="btn btn-default" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
+</md-list>
+
+
+<md-list ng-hide="github.showPr" >
+  <h3 class="ng-binding">Sélection de la pull request : </h3>
+  <md-radio-group ng-model="github.reposelected">
+    <md-list-item ng-repeat="pullRequest in github.pullRequests">
+      <md-radio-button value="{{ pullRequest.name }}" name="prRadio" >
+        Titre : {{ pullRequest.title }} - Url : <a href="{{ pullRequest.html_url }}" target="_blank"> {{ pullRequest.html_url }} </a>
+      </md-radio-button>
+    </md-list-item>
+  </md-radio-group>
+  <br/>
+  <button type="button" class="btn btn-default">Comparer cette Pull Request</button>
+</md-list>

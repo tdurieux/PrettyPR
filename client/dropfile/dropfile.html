@@ -1,0 +1,49 @@
+<div flex class="col-xs-6">
+    <div ngf-drop ngf-select
+         ngf-change="dropfile.addFile1($files)"
+         ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+         ngf-multiple="false" ngf-allow-dir="false" ngf-accept="'*/*'"
+         ngf-drop-available="true">
+      <div ng-show="dropfile.showFile1" class="animate-show">
+        <div>Cliquer ici pour ajouter le 1er fichier</div>
+        <div>
+          <strong>OU</strong>
+        </div>
+        <div>Vous pouvez aussi le dropper directement ici</div>
+      </div>
+      <div ng-hide="dropfile.showFile1" class="animate-show">
+        <i style="color: #20be00;" class="fa fa-check-circle fa-4x "></i><br/>
+        Fichier ajouté avec succès
+      </div>
+    </div>
+</div>
+
+
+<div flex class="col-xs-6">
+    <div ngf-drop ngf-select
+         ngf-change="dropfile.addFile2($files)"
+         ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+         ngf-multiple="false" ngf-allow-dir="false" ngf-accept="'*/*'"
+         ngf-drop-available="true">
+
+        <div ng-show="dropfile.showFile2" class="animate-show">
+         <div>Cliquer ici pour ajouter le 2ième fichier</div>
+         <div>
+           <strong>OU</strong>
+         </div>
+         <div>Vous pouvez aussi le dropper directement ici</div>
+       </div>
+       <div ng-hide="dropfile.showFile2" class="animate-show">
+         <i style="color: #20be00;" class="fa fa-check-circle fa-4x "></i><br/>
+         Fichier ajouté avec succès
+       </div>
+     </div>
+</div>
+
+
+<md-button
+  ng-show="!dropfile.showFile1 && !dropfile.showFile2"
+  class="md-raised buttonfade"
+  ng-click="dropfile.traiterFichier()">
+    Traiter les fichiers
+</md-button>
