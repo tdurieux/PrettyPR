@@ -21,6 +21,12 @@ function validationUsername(selected, meteorAccount, otherAccount){
 }
 
 angular.module('prettyPr')
+  .filter('startFrom', function() {
+      return function(input, start) {
+          start = +start; //parse to int
+          return input.slice(start);
+      }
+  })
   .directive('github', function() {
   return {
     restrict: 'E',
@@ -37,6 +43,7 @@ angular.module('prettyPr')
       this.userselected = "mine";
       this.reposelected = null;
       this.prselected = null;
+      this.currentPageRepo = 0;
 
       this.helpers({
         showRepos: () => {
@@ -50,6 +57,9 @@ angular.module('prettyPr')
         },
         pullRequests: () => {
           return this.pullRequests.list();
+        },
+        numberOfPagesRepo: () => {
+          return Math.ceil(this.repos.list().length/10);
         }
       });
 
@@ -128,6 +138,7 @@ angular.module('prettyPr')
       /*TODO : Rajouter un ng click sur le radio button 'Autre compte'
       qui va forcer le focus sur l'input
       De même quand on click sur l'input, forcer le radio button */
+      /*TODO : Rajouter une recherche sur l'utilisateur github ? */
 
     }
   }
