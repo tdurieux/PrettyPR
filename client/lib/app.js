@@ -5,7 +5,8 @@ angular.module('prettyPr', [
   'ngFileUpload',
   'ui.bootstrap',
   'ngAnimate',
-  'accounts.ui'
+  'accounts.ui',
+  'angular-loading-bar'
 ]);
 
 bertError = function bertError(message){
