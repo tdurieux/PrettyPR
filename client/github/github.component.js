@@ -69,6 +69,7 @@ angular.module('prettyPr')
         if(!githubUsername)
           return;
 
+        this.currentPageRepo = 0
 
         Meteor.call('getReposFromUser', githubUsername,
           function (error, result) {

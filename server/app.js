@@ -7,11 +7,14 @@ function initGithubApi(){
       version: "3.0.0"
   });
 
-  /*github.authenticate({
+  tokenGithub = Assets.getText("secret.properties").replace(/(\r\n|\n|\r)/gm,"");;
+
+  // or oauth
+  github.authenticate({
     type: "oauth",
-    key: "****",
-    secret: "****"
-  });*/
+    token: tokenGithub
+  });
+
 
 }
 
@@ -61,19 +64,44 @@ Meteor.methods({
       if(!github)
         initGithubApi();
 
-      var repos = Async.runSync(function(done) {
-        github.repos.getFromUser({
-            user: username
-        }, function(err, res) {
-            done(err, res);
-        });
-      });
+      var currentPage = 0;
+      var repos = null;
+      var reposTemp = null;
 
-      if(repos.error != null){
-        if(repos.error.message.search("Not Found") != -1)
-          throw new Meteor.Error(400, "User not found");
-        else
-          throw new Meteor.Error(400, repos.error.message);
+      //On va boucler car on peut avoir que 100 repos à la fois
+      while(true){
+        var reposTemp = Async.runSync(function(done) {
+          github.repos.getFromUser({
+              user: username,
+              page: currentPage,
+              per_page: 100
+          }, function(err, res) {
+              done(err, res);
+          });
+        });
+
+        if(reposTemp.error != null){
+          if(reposTemp.error.message.search("Not Found") != -1)
+            throw new Meteor.Error(400, "User not found");
+          else
+            throw new Meteor.Error(400, reposTemp.error.message);
+        }
+
+
+        //On a tous les repos de l'utilisateur
+        if(reposTemp.result.length % 100 != 0){
+          if(!repos)
+            repos = reposTemp;
+          break;
+        }
+        else{
+          currentPage++;
+          if(!repos)
+            repos = reposTemp;
+          else {
+            repos.result = repos.result.concat(reposTemp.result);
+          }
+        }
       }
 
       return repos.result;
