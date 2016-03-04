@@ -51,9 +51,11 @@
   <h3 class="ng-binding">Sélection de la pull request : </h3>
   <md-radio-group ng-model="github.reposelected">
     <md-list-item ng-repeat="pullRequest in github.pullRequests">
-      <md-radio-button value="{{ pullRequest.name }}" name="prRadio" >
-        Titre : {{ pullRequest.title }} - Url : <a href="{{ pullRequest.html_url }}" target="_blank"> {{ pullRequest.html_url }} </a>
-      </md-radio-button>
+      <div>
+        <md-radio-button value="{{ pullRequest.html_url }}" name="prRadio" >
+          Titre : {{ pullRequest.title }} - Url : <a href="{{ pullRequest.html_url }}" target="_blank"> {{ pullRequest.html_url }} </a>
+        </md-radio-button>
+      </div>
     </md-list-item>
   </md-radio-group>
   <br/>

@@ -1,21 +1,17 @@
 var GithubApi = null;
 var github = null;
 
-function initGithubApi(){
+function initGithubApi(token){
   GithubApi = Meteor.npmRequire('github');
   github = new GithubApi({
       version: "3.0.0"
   });
 
-  tokenGithub = Assets.getText("secret.properties").replace(/(\r\n|\n|\r)/gm,"");;
-
   // or oauth
   github.authenticate({
     type: "oauth",
-    token: tokenGithub
+    token: token
   });
-
-
 }
 
 Meteor.methods({
@@ -59,10 +55,10 @@ Meteor.methods({
 
   },
 
-  getReposFromUser: function (username) {
+  getReposFromUser: function (username, token) {
 
       if(!github)
-        initGithubApi();
+        initGithubApi(token);
 
       var currentPage = 0;
       var repos = null;
@@ -107,10 +103,10 @@ Meteor.methods({
       return repos.result;
   },
 
-  getPullFromRepo: function (username, reponame) {
+  getPullFromRepo: function (username, reponame, token) {
 
     if(!github)
-      initGithubApi();
+      initGithubApi(token);
 
     var pullRequests = Async.runSync(function(done) {
       github.pullRequests.getAll({

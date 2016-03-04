@@ -1,5 +1,12 @@
 function validationUsername(selected, meteorAccount, otherAccount){
 
+  if(!meteorAccount){
+    bertError("Veuillez vous connecter à Github !");
+    return null;
+  }
+
+  meteorAccount = meteorAccount.services.github.username;
+
   if(selected != "other" && selected != "mine"){
     bertError("Aucune radiobox pour l'utilisateur sélectionnée !");
     return null;
@@ -32,7 +39,7 @@ angular.module('prettyPr')
     restrict: 'E',
     templateUrl: 'client/github/github.html',
     controllerAs: 'github',
-    controller: function($scope, $reactive) {
+    controller: function($scope, $reactive, cfpLoadingBar) {
       $reactive(this).attach($scope);
 
       this.subscribe('users');
@@ -65,14 +72,19 @@ angular.module('prettyPr')
 
       this.getRepo = () => {
         var githubUsername = validationUsername(this.userselected,
-          Meteor.user().services.github.username, this.otherAccount);
+          Meteor.user(), this.otherAccount);
         if(!githubUsername)
           return;
 
-        this.currentPageRepo = 0
+        var accessToken = Meteor.user().services.github.accessToken;
 
-        Meteor.call('getReposFromUser', githubUsername,
+        this.currentPageRepo = 0;
+
+        cfpLoadingBar.start();
+
+        Meteor.call('getReposFromUser', githubUsername, accessToken,
           function (error, result) {
+              cfpLoadingBar.complete();
               if(error){
                 bertError("Erreur lors de la récupération de vos repos. Detail : " + error);
               } else {
@@ -93,17 +105,23 @@ angular.module('prettyPr')
       this.getPr = (reponame) => {
 
         var githubUsername = validationUsername(this.userselected,
-          Meteor.user().services.github.username, this.otherAccount);
+          Meteor.user(), this.otherAccount);
 
         if(!githubUsername)
           return;
 
-        if(!reponame)
+        if(!reponame){
           bertError("Vous n'avez pas sélectionné de repo !");
+          return;
+        }
+
+        var accessToken = Meteor.user().services.github.accessToken;
 
 
-        Meteor.call('getPullFromRepo', githubUsername, reponame,
+        cfpLoadingBar.start();
+        Meteor.call('getPullFromRepo', githubUsername, reponame, accessToken,
           function (error, result) {
+              cfpLoadingBar.complete();
               if(error){
                 bertError("Erreur lors de la récupération de vos pullRequests. Detail : " + error);
               } else {
@@ -135,7 +153,7 @@ angular.module('prettyPr')
 
 
 
-      /*TODO : verifier que github api utiliser bien des requetes authentifié */
+      /*TODO : le lien dans les pull requests n'est pas cliquable */
       /*TODO : Rajouter un ng click sur le radio button 'Autre compte'
       qui va forcer le focus sur l'input
       De même quand on click sur l'input, forcer le radio button */
