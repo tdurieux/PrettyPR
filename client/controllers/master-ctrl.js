@@ -19,7 +19,9 @@ function MasterCtrl($scope, $location) {
     $scope.descriptionCurrent = function(){
         switch ($location.path()) {
           case "/dropfile":
-            return "Uploader 2 fichiers et comparer les de manière sémantique";
+            return "Uploadez 2 fichiers et comparer les de manière sémantique";
+          case "/github":
+            return "Connectez vous à Github pour comparer des pullRequests";
           default:
             return "";
         }
