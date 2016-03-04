@@ -10,7 +10,7 @@
     <md-radio-button style="margin-top: 10px;" class="md-primary" value="other" name="userselected" aria-label="other account github" ></md-radio-button>
     <md-input-container>
       <label for="input_170">Autre compte</label>
-      <input aria-invalid="false" id="input_170" class="ng-pristine ng-valid md-input ng-touched" ng-model="github.otherAccount">
+      <input ng-keyup="$event.keyCode == 13 && github.getRepo()" aria-invalid="false" id="input_170" class="ng-pristine ng-valid md-input ng-touched" ng-model="github.otherAccount">
     </md-input-container>
   </div>
   <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getRepo()">Obtenir les repos</button>
@@ -25,7 +25,7 @@
   </md-input-container>
   <md-radio-group ng-model="github.reposelected">
     <md-list-item ng-repeat="repo in github.reposUser
-      | filter:github.searchRepo
+      | filter:{name: github.searchRepo}
       | startFrom:github.currentPageRepo*10
       | limitTo:10">
       <md-radio-button value="{{ repo.name }}" name="repoRadio">
