@@ -138,9 +138,26 @@ Meteor.methods({
 
       if(repos.error != null){
         if(repos.error.message.search("Not Found") != -1)
-          throw new Meteor.Error(400, "User not found");
-        else
-          throw new Meteor.Error(400, repos.error.message);
+            throw new Meteor.Error(400, "User not found");
+          else
+            throw new Meteor.Error(400, reposTemp.error.message);
+        }
+
+
+        //On a tous les repos de l'utilisateur
+        if(reposTemp.result.length % 100 != 0){
+          if(!repos)
+            repos = reposTemp;
+          break;
+        }
+        else{
+          currentPage++;
+          if(!repos)
+            repos = reposTemp;
+          else {
+            repos.result = repos.result.concat(reposTemp.result);
+          }
+        }
       }
 
       return repos.result;
