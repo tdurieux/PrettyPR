@@ -1,4 +1,4 @@
-var FileUploadedFS = new FS.Store.FileSystem("fileUploaded");
+var FileUploadedFS = new FS.Store.FileSystem("fileUploaded", {path: "~/prettyPrUpload"});
 
 FileUploaded = new FS.Collection('fileUploaded', {
   stores: [FileUploadedFS ]
