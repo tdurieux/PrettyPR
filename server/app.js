@@ -1,6 +1,19 @@
 Meteor.methods({
 
-  traitementFichier: function (idFile1, idFile2) {
+  traitementFichier: function(idFile1, idFile2){
+        var exec = Meteor.npmRequire('child_process').exec, child;
+        var base = process.env.PWD;
+        child = exec('/usr/bin/java -jar ' + base + '/server/prettyPR.jar HelloWord ~/prettyPrUpload/' + pathFichierOld + '~/prettyPrUpload/' + pathFichierNew,
+          function (error, stdout, stderr){
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if(error !== null){
+              console.log('exec error: ' + error);
+            }
+        });
+  },
+
+  traitementFichierOld: function (idFile1, idFile2) {
 
     //Vu qu'on est dans un callback avec le readstream
     //On doit bindEnvironment sinon meteor ne nous laisse
