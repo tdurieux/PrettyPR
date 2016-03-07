@@ -266,8 +266,11 @@ angular.module('prettyPr')
     restrict: 'E',
     templateUrl: 'client/results/results.html',
     controllerAs: 'results',
-    controller: function($scope, $reactive) {
+    controller: function($scope, $reactive, sharedProperties) {
       $reactive(this).attach($scope);
+
+      console.log(sharedProperties.getChangement());
+
 
       this.pr = {};
       this.prettyPR = {
@@ -424,7 +427,8 @@ angular.module('prettyPr')
         },
         "repository": "spoon",
         "user": "INRIA"
-        };
+      };
+      console.log(this.prettyPR);
 
 
     }

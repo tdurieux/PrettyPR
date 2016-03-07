@@ -15,11 +15,9 @@ angular.module('prettyPr').directive('dropfile', function() {
     restrict: 'E',
     templateUrl: 'client/dropfile/dropfile.html',
     controllerAs: 'dropfile',
-    controller: function($scope, $reactive) {
+    controller: function($scope, $reactive, $location, sharedProperties) {
       $reactive(this).attach($scope);
       this.subscribe('FileUploaded');
-
-      this.test = true;
 
       this.file1 = null;
       this.file2 = null;
@@ -69,6 +67,9 @@ angular.module('prettyPr').directive('dropfile', function() {
                   bertError('Erreur lors du traitement : ' + error);
                 }else{
                   bertInfo('Les fichiers ont été traités avec succès');
+                  sharedProperties.setChangement(result);
+                  $location.path("/results");
+                  $scope.$apply();
                 }
               });
         }

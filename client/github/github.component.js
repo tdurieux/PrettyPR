@@ -152,8 +152,6 @@ angular.module('prettyPr')
       }.bind(this));
 
 
-
-      /*TODO: Rajouté un effet pour dire sur quelle page on est */
       /*TODO : le lien dans les pull requests n'est pas cliquable */
       /*TODO : Rajouter un ng click sur le radio button 'Autre compte'
       qui va forcer le focus sur l'input
