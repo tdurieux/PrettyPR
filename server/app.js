@@ -1,6 +1,12 @@
 var GithubApi = null;
 var github = null;
 
+var filename1 = null;
+var fichier1 = null;
+
+var fichier2 = null;
+var filename2 = null;
+
 function initGithubApi(token){
   GithubApi = Meteor.npmRequire('github');
   github = new GithubApi({
@@ -38,8 +44,24 @@ Meteor.methods({
       return FileUploaded.remove({_id: key});
     });
 
+    callJava = Meteor.bindEnvironment(function (key) {
+
+      if(filename1 && filename2){
+
+        //TODO : ici tu peux appeler ton java
+        //fichier1 (contient le contenu du fichier 1)
+        //fichier2 (contient le contenu du fichier 2)
+        //filename1 : nom du fichier1
+        //filename2 : nom du fichier2
+        console.log(filename1);
+        console.log(filename2);
+      }
+    });
+
+
     //Fichier 1
     var file = FileUploaded.findOne({ _id: idFile1});
+    filename1 = file.original.name;
     fichier1 = "";
 
     file.createReadStream("fileUploaded")
@@ -47,13 +69,14 @@ Meteor.methods({
       fichier1 += chunk;
     })
     .on('close', function() {
-      console.log(fichier1);
-      removeFile(idFile1);
+      //removeFile(idFile1);
+      callJava();
     });
 
 
     //Fichier 2
     var file2 = FileUploaded.findOne({ _id: idFile2});
+    filename2 = file2.original.name;
     fichier2 = "";
 
     file2.createReadStream("fileUploaded")
@@ -61,8 +84,8 @@ Meteor.methods({
       fichier2 += chunk;
     })
     .on('close', function() {
-      console.log(fichier2);
-      removeFile(idFile2);
+      //removeFile(idFile2);
+      //callJava();
     });
 
 
