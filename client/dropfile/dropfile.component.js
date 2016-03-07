@@ -40,7 +40,7 @@ angular.module('prettyPr').directive('dropfile', function() {
 
           FileUploaded.insert(this.file1, function (err, fileObj) {
             if (err) {
-                console.log("there was an error", err);
+                bertError("Erreur pendant le traitement du fichier. " + err);
                 this.file1 = null;
             }
           });
@@ -54,7 +54,7 @@ angular.module('prettyPr').directive('dropfile', function() {
 
           FileUploaded.insert(this.file2, function (err, fileObj) {
             if (err) {
-                console.log("there was an error", err);
+                bertError("Erreur pendant le traitement du fichier. " + err);
                 this.file2 = null;
             }
           });
