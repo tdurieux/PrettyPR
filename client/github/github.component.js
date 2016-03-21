@@ -43,6 +43,7 @@ angular.module('prettyPr')
       $reactive(this).attach($scope);
 
       this.subscribe('users');
+      this.subscribe('GithubRepos');
 
       this.repos = new ReactiveArray();
       this.pullRequests = new ReactiveArray();
@@ -82,6 +83,25 @@ angular.module('prettyPr')
 
         cfpLoadingBar.start();
 
+
+
+        //Try to get repos from cache
+        var reposCache = GithubRepos.findOne({user:githubUsername});
+
+        if(reposCache){
+          reposCache = reposCache.repos;
+          this.repos.splice(0, this.repos.length);
+          for (var i = 0; i < reposCache.length; i++) {
+            this.repos.push(reposCache[i]);
+            if(i == 0){
+              this.reposelected = reposCache[i].name;
+            }
+          }
+          cfpLoadingBar.complete();
+          bertInfo("Récupération de vos repos réussie !");
+          return;
+        }
+
         Meteor.call('getReposFromUser', githubUsername, accessToken,
           function (error, result) {
               cfpLoadingBar.complete();
@@ -97,6 +117,7 @@ angular.module('prettyPr')
                     this.reposelected = result[i].name;
                   }
                 }
+
                 bertInfo("Récupération de vos repos réussie !");
               }
         }.bind(this));

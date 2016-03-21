@@ -82,6 +82,13 @@ Meteor.methods({
         }
       }
 
+
+      GithubRepos.upsert({user:username}, {$set:{
+        user:username,
+        repos:repos.result
+      }});
+
+
       return repos.result;
   },
 
