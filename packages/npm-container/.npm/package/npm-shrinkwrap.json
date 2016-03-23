@@ -41,6 +41,27 @@
       "resolved": "https://registry.npmjs.org/oauth/-/oauth-0.9.14.tgz",
       "from": "oauth@0.9.14"
     },
+    "githubhook": {
+      "version": "1.4.0",
+      "dependencies": {
+        "docopt": {
+          "version": "0.6.2"
+        },
+        "multiline": {
+          "version": "1.0.2",
+          "dependencies": {
+            "strip-indent": {
+              "version": "1.0.1",
+              "dependencies": {
+                "get-stdin": {
+                  "version": "4.0.1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "redis": {
       "version": "0.8.2",
       "resolved": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz",
