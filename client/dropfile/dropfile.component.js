@@ -66,7 +66,7 @@ angular.module('prettyPr').directive('dropfile', function() {
                 if(error){
                   bertError('Erreur lors du traitement : ' + error);
                 }else{
-                  bertInfo('Les fichiers ont été traités avec succès');
+                  bertInfo('Les fichiers ont été traités avec succès');              
                   sharedProperties.setChangement(result);
                   $location.path("/results");
                   $scope.$apply();

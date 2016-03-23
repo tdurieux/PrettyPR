@@ -39,7 +39,7 @@ angular.module('prettyPr')
     restrict: 'E',
     templateUrl: 'client/github/github.html',
     controllerAs: 'github',
-    controller: function($scope, $reactive, cfpLoadingBar) {
+    controller: function($scope, $reactive, cfpLoadingBar, $location, sharedProperties) {
       $reactive(this).attach($scope);
 
       //Subscribe to differents sources to access data
@@ -81,6 +81,8 @@ angular.module('prettyPr')
 
       //######################## METHODS #############################
 
+
+      //######## GET REPOS
       this.getRepo = () => {
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
@@ -133,7 +135,8 @@ angular.module('prettyPr')
         }.bind(this));
       }
 
-      this.getPr = (reponame) => {
+      //######## GET PULL REQUESTS
+      this.getPr = () => {
 
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
@@ -141,7 +144,7 @@ angular.module('prettyPr')
         if(!githubUsername)
           return;
 
-        if(!reponame){
+        if(!this.reposelected){
           bertError("Vous n'avez pas sélectionné de repo !");
           return;
         }
@@ -150,7 +153,7 @@ angular.module('prettyPr')
         cfpLoadingBar.start();
 
         //Try to get pr from cache
-        var prCache = GithubPr.findOne({user:githubUsername, repo: reponame});
+        var prCache = GithubPr.findOne({user:githubUsername, repo: this.reposelected});
 
         if(!this.forcePr && prCache){
           prCache = prCache.pullRequests;
@@ -171,7 +174,7 @@ angular.module('prettyPr')
           return;
         }
 
-        Meteor.call('getPullFromRepo', githubUsername, reponame, accessToken,
+        Meteor.call('getPullFromRepo', githubUsername, this.reposelected, accessToken,
           function (error, result) {
               cfpLoadingBar.complete();
               if(error){
@@ -192,6 +195,43 @@ angular.module('prettyPr')
               }
         }.bind(this));
       }
+
+
+
+      this.compare = () => {
+
+        console.log(this.prselected);
+        var idPr = this.prselected.split('/').pop();
+
+        var githubUsername = validationUsername(this.userselected,
+          Meteor.user(), this.otherAccount);
+
+        if(!githubUsername)
+          return;
+
+        if(!this.prselected){
+          bertError("Vous n'avez pas sélectionné de pullRequest !");
+          return;
+        }
+
+        var accessToken = Meteor.user().services.github.accessToken;
+
+        Meteor.call('traitementPr', githubUsername, this.reposelected, idPr, accessToken,
+          function (error, result) {
+
+              if(error){
+                bertError("Erreur lors de la comparaison. Detail : " + error);
+              } else {
+
+
+                sharedProperties.setChangement(result);
+                $location.path("/results");
+                $scope.$apply();
+
+              }
+        }.bind(this));
+
+      };
 
 
       //Le tracker va s'occuper d'appeler la méthode si la valeur de l'user change
