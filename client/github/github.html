@@ -14,6 +14,7 @@
     </md-input-container>
   </div>
   <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getRepo()">Obtenir les repos</button>
+  <md-checkbox ng-model="github.forceRepo">Force reload</md-checkbox>
 </md-radio-group>
 
 
@@ -44,6 +45,7 @@
   </md-radio-group>
   <br/>
   <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
+  <md-checkbox ng-model="github.forcePr">Force reload</md-checkbox>
 </md-list>
 
 

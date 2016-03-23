@@ -82,7 +82,7 @@ Meteor.methods({
         }
       }
 
-
+      //Save in db cache
       GithubRepos.upsert({user:username}, {$set:{
         user:username,
         repos:repos.result
@@ -106,8 +106,17 @@ Meteor.methods({
       });
     });
 
-    if(pullRequests.error != null)
-        throw new Meteor.Error(400, repos.error.message);
+    if(pullRequests.error != null){
+      throw new Meteor.Error(400, repos.error.message);
+    }
+
+    //Save in db cache
+    GithubPr.upsert({user:username, repo: reponame}, {$set:{
+      user:username,
+      repo: reponame,
+      pullRequests:pullRequests.result
+    }});
+
 
     return pullRequests.result;
   }
