@@ -38,6 +38,12 @@ Meteor.methods({
         return child;
   },
 
+  traitementPr: function(username, repository, idPr){
+
+    return;
+
+  },
+
   getReposFromUser: function (username, token) {
 
       if(!github)
