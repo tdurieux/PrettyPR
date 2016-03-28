@@ -3,6 +3,27 @@
     "github": {
       "version": "0.1.8"
     },
+    "githubhook": {
+      "version": "1.4.0",
+      "dependencies": {
+        "docopt": {
+          "version": "0.6.2"
+        },
+        "multiline": {
+          "version": "1.0.2",
+          "dependencies": {
+            "strip-indent": {
+              "version": "1.0.1",
+              "dependencies": {
+                "get-stdin": {
+                  "version": "4.0.1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "redis": {
       "version": "0.8.2"
     }
