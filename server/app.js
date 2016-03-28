@@ -23,23 +23,54 @@ function initGithubApi(token){
 Meteor.methods({
 
   traitementFichier: function(idFile1, idFile2){
-        var execSync = Meteor.npmRequire('exec-sync');
+        var fs = Meteor.npmRequire('fs');
 
         var filename1 = 'fileUploaded-' + idFile1 + '-' + FileUploaded.findOne({ _id: idFile1}).original.name;
         var filename2 = 'fileUploaded-' + idFile2 + '-' + FileUploaded.findOne({ _id: idFile2}).original.name;
 
-        var base = process.env.PWD;
-        child = execSync('/usr/bin/java -jar '
-          + base + '/server/prettyPR.jar'
-          + ' HelloWorld ~/prettyPrUpload/' + filename1
-          + ' HelloWorld2 ~/prettyPrUpload/' + filename2);
+        var data1 = fs.readFileSync(Meteor.settings.public.meteor_env + "/prettyPrUpload/" + filename1 , 'utf8');
+        var data2 = fs.readFileSync(Meteor.settings.public.meteor_env + "/prettyPrUpload/" + filename2 , 'utf8');
 
-        //TODO : supprimer les fichiers après traitement
-        return child;
+        filename1 = filename1.split("-")[6].replace(/\.[^/.]+$/, "");
+        filename2 = filename2.split("-")[6].replace(/\.[^/.]+$/, "");
+
+        var oldFileName = filename1;
+        var newFileName = filename2;
+
+        try {
+          var result =  HTTP.call( 'POST', 'http://localhost:8080/api/prettypr', {
+            data: {
+              "oldFileName": oldFileName,
+              "newFileName": newFileName,
+              "oldFile": data1,
+              "newFile": data2
+            }
+          });
+
+
+          result.oldFile = data1;
+          result.newFile = data2;
+          result.newFileName = newFileName;
+          result.oldFileName = oldFileName;
+          result.title = "File Uploaded";
+          result.id = 0;
+          result.url = "File Uploaded";
+          result.body = "File Uploaded";
+          result.repository = "File Uploaded";
+          result.user = "File Uploaded";
+
+          return result;
+
+        } catch(e){
+          console.log("Error with java serveur : ", e );
+        }
+
   },
 
   traitementPr: function(username, repository, idPr){
 
+    if(!github)
+      initGithubApi(token);
     return;
 
   },
