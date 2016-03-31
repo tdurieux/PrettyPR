@@ -44,14 +44,14 @@
     </div>
   </md-radio-group>
   <br/>
-  <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getPr(github.reposelected)">Obtenir les pull requests</button>
+  <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.getPr()">Obtenir les pull requests</button>
   <md-checkbox ng-model="github.forcePr">Force reload</md-checkbox>
 </md-list>
 
 
 <md-list ng-hide="github.showPr" >
   <h3 class="ng-binding">Sélection de la pull request : </h3>
-  <md-radio-group ng-model="github.reposelected">
+  <md-radio-group ng-model="github.prselected">
     <md-list-item ng-repeat="pullRequest in github.pullRequests">
       <div>
         <md-radio-button value="{{ pullRequest.html_url }}" name="prRadio" >
@@ -61,5 +61,5 @@
     </md-list-item>
   </md-radio-group>
   <br/>
-  <button class="md-raised md-primary md-button md-ink-ripple" type="button">Comparer cette Pull Request</button>
+  <button class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="github.compare()">Comparer cette Pull Request</button>
 </md-list>

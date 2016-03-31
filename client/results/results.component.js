@@ -271,29 +271,12 @@ angular.module('prettyPr')
 
       var result = sharedProperties.getChangement();
 
+      console.log(result);
+
       this.pr = {};
       this.prettyPR = {
-        "pullrequest": {
-          "changes": [
-            {
-              "oldFile": result.oldFile,
-              "newFile": result.newFile,
-              "location": {
-                "path": "src/main/java/spoon/" + result.newFileName + ".java",
-                "type": "Class",
-                "class": result.newFileName
-              },
-              "actions": result.data.actions
-            }
-          ],
-        "id": result.id,
-        "title": result.title,
-        "body": result.body,
-        "url": result.url
-      },
-      "repository": result.repository,
-      "user": result.user
-    };
+        "pullrequest": result
+      }
     }
   }
 });
