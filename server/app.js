@@ -38,7 +38,7 @@ Meteor.methods({
         var newFileName = filename2;
 
         try {
-          var result =  HTTP.call( 'POST', 'http://localhost:8080/api/prettypr', {
+          var resultPr =  HTTP.call( 'POST', 'http://localhost:8080/api/prettypr', {
             data: {
               "oldFileName": oldFileName,
               "newFileName": newFileName,
@@ -47,17 +47,34 @@ Meteor.methods({
             }
           });
 
+          console.log(resultPr);
 
-          result.oldFile = data1;
-          result.newFile = data2;
-          result.newFileName = newFileName;
-          result.oldFileName = oldFileName;
+          var result = new Object();
+          result.changes = new Array();
           result.title = "File Uploaded";
           result.id = 0;
           result.url = "File Uploaded";
           result.body = "File Uploaded";
           result.repository = "File Uploaded";
           result.user = "File Uploaded";
+
+          var change = new Object();
+
+          change.oldFile = data1;
+          change.newFile = data2;
+          change.actions = resultPr.data.actions;
+          change.location = new Object();
+          change.location.path = "/helloworld.java";
+          change.location.type = "Class";
+          change.location.class = "HelloWorld";
+          //result.newFileName = newFileName;
+          //result.oldFileName = oldFileName;
+
+          result.changes.push(change);
+
+          console.log(result);
+
+
 
           return result;
 
@@ -67,11 +84,124 @@ Meteor.methods({
 
   },
 
-  traitementPr: function(username, repository, idPr){
+  traitementPr: function(username, repository, idPr, token){
 
     if(!github)
       initGithubApi(token);
-    return;
+
+    var oldFiles = [];
+    var prFiles = [];
+    var regex = /(?:\.([^.]+))?$/;
+
+    // Récupération des anciens fichiers sur le repo
+    var contentOldFiles = Async.runSync(function(done) {
+      github.repos.getContent({
+          user: username,
+          per_page: 100,
+          repo: repository,
+          path: ""
+      }, function(err, res) {
+          done(err, res);
+      });
+    });
+
+    if(contentOldFiles.error != null){
+      throw new Meteor.Error(400, contentOldFiles.error.message);
+    }
+
+    contentOldFiles.result.forEach(function (contentFile) {
+
+      if(regex.exec(contentFile.name)[1] == "java"){
+        var file = new Object();
+        file.path = contentFile.name;
+        file.name = contentFile.name.replace(/^.*[\\\/]/, '');
+        file.content = HTTP.call( 'GET', contentFile.download_url).content;
+
+        oldFiles.push(file);
+      }
+    });
+
+
+    // Récupération des fichiers de la pull request
+    var contentPrFiles = Async.runSync(function(done) {
+      github.pullRequests.getFiles({
+          user: username,
+          per_page: 100,
+          repo: repository,
+          number: idPr
+      }, function(err, res) {
+          done(err, res);
+      });
+    });
+
+    if(contentPrFiles.error != null){
+      throw new Meteor.Error(400, contentPrFiles.error.message);
+    }
+
+
+
+    contentPrFiles.result.forEach(function (contentFile) {
+      if (contentFile.status == 'modified' && regex.exec(contentFile.filename)[1] == "java"){
+        var file = new Object();
+        file.path = contentFile.filename;
+        file.name = contentFile.filename.replace(/^.*[\\\/]/, '');
+        file.content = HTTP.call( 'GET', contentFile.raw_url).content;
+        prFiles.push(file);
+      }
+    });
+
+
+
+    var result = new Object();
+    result.changes = new Array();
+    result.title = "File Uploaded";
+    result.id = idPr;
+    result.url = "File Uploaded";
+    result.body = "File Uploaded";
+    result.repository = repository;
+    result.user = username;
+
+
+
+    prFiles.forEach(function (prFile){
+
+      oldFiles.forEach(function (oldFile){
+
+        if(oldFile.name == prFile.name){
+
+          var resultPr =  HTTP.call( 'POST', 'http://localhost:8080/api/prettypr', {
+            data: {
+              "oldFileName": oldFile.name,
+              "newFileName": prFile.name,
+              "oldFile": oldFile.content,
+              "newFile": prFile.content
+            }
+          });
+
+          var change = new Object();
+          change.oldFile = oldFile.content;
+          change.newFile = prFile.content;
+          change.actions = resultPr.data.actions;
+
+          change.location = new Object();
+          change.location.path = prFile.path;
+          change.location.class = prFile.name.replace(/\.[^/.]+$/, "");
+
+          if(prFile.content.search("class") != -1)
+            change.location.type = "Class";
+          else if(prFile.content.search("interface") != -1)
+            change.location.type = "Interface";
+          else
+            change.location.type = "Test";
+
+          result.changes.push(change);
+
+        }
+
+      });
+    });
+
+    return result;
 
   },
 
