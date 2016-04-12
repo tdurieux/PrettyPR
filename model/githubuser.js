@@ -1,9 +1,9 @@
-GithubPr = new Mongo.Collection("GithubPr");
+GithubUser = new Mongo.Collection("GithubUser");
 
 
 if (Meteor.isServer) {
 
-  GithubPr.allow({
+  GithubUser.allow({
     insert: function () {
       return true;
     },
@@ -13,11 +13,11 @@ if (Meteor.isServer) {
     update: function () {
       return true;
     }
+
   });
 
-
-  Meteor.publish('GithubPr', function() {
-    return GithubPr.find({});
+  Meteor.publish('GithubUser', function() {
+    return GithubUser.find({});
   });
 
 }

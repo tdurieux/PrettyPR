@@ -47,9 +47,7 @@ angular.module('prettyPr')
       this.subscribe('GithubRepos');
       this.subscribe('GithubPr');
 
-
       //######################## Vars #############################
-
       this.repos = new ReactiveArray();
       this.pullRequests = new ReactiveArray();
       this.otherAccount = null;
@@ -86,16 +84,15 @@ angular.module('prettyPr')
       this.getRepo = () => {
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
+
         if(!githubUsername)
           return;
 
         var accessToken = Meteor.user().services.github.accessToken;
 
+
         this.currentPageRepo = 0;
-
         cfpLoadingBar.start();
-
-
 
         //Try to get repos from cache
         var reposCache = GithubRepos.findOne({user:githubUsername});
@@ -164,7 +161,7 @@ angular.module('prettyPr')
           for (var i = 0; i < prCache.length; i++) {
             this.pullRequests.push(prCache[i]);
             if(i == 0){
-              this.prselected = prCache[i].title;
+              this.prselected = prCache[i];
             }
           }
           if(this.pullRequests.length == 0){
@@ -186,7 +183,7 @@ angular.module('prettyPr')
                 for (var i = 0; i < result.length; i++) {
                   this.pullRequests.push(result[i]);
                   if(i == 0){
-                    this.prselected = result[i].title;
+                    this.prselected = result[i];
                   }
                 }
                 if(this.pullRequests.length == 0){
@@ -200,8 +197,7 @@ angular.module('prettyPr')
 
       this.compare = () => {
 
-        console.log(this.prselected);
-        var idPr = this.prselected.split('/').pop();
+        var pr = JSON.parse(this.prselected);
 
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
@@ -209,25 +205,25 @@ angular.module('prettyPr')
         if(!githubUsername)
           return;
 
-        if(!this.prselected){
+        if(!pr){
           bertError("Vous n'avez pas sélectionné de pullRequest !");
           return;
         }
 
+        cfpLoadingBar.start();
+
         var accessToken = Meteor.user().services.github.accessToken;
 
-        Meteor.call('traitementPr', githubUsername, this.reposelected, idPr, accessToken,
+        Meteor.call('traitementPr', githubUsername, this.reposelected, pr.number, accessToken, pr.title, pr.html_url,
           function (error, result) {
-
+              cfpLoadingBar.complete();
               if(error){
                 bertError("Erreur lors de la comparaison. Detail : " + error);
               } else {
-
-
+                //Changement de page en stockant les résultats
                 sharedProperties.setChangement(result);
                 $location.path("/results");
                 $scope.$apply();
-
               }
         }.bind(this));
 
@@ -238,7 +234,7 @@ angular.module('prettyPr')
       //Celle-ci change si l'user etait deja connecté auparavant à la fin du chargement
       //de la page
       Tracker.autorun(function() {
-        if (Meteor.user() != undefined && Meteor.user().services != undefined ) {
+        if (Meteor.user() != undefined && Meteor.user().services != undefined && $location.path() == "/github" ) {
           this.getRepo();
         }
       }.bind(this));
