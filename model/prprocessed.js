@@ -1,4 +1,4 @@
-PrProcessed = new Mongo.Collection("prprocessed");
+PrProcessed = new Mongo.Collection("PrProcessed");
 
 
 if (Meteor.isServer) {

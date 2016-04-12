@@ -266,16 +266,14 @@ angular.module('prettyPr')
     restrict: 'E',
     templateUrl: 'client/results/results.html',
     controllerAs: 'results',
-    controller: function($scope, $reactive, sharedProperties) {
+    controller: function($scope, $reactive, cfpLoadingBar, $location, sharedProperties) {
       $reactive(this).attach($scope);
+      this.result = sharedProperties.getChangement();
 
-      var result = sharedProperties.getChangement();
-
-      console.log(result);
-
-      this.pr = {};
-      this.prettyPR = {
-        "pullrequest": result
+      if(this.result){
+        this.prettyPR = {
+          "pullrequest": this.result
+        }
       }
     }
   }

@@ -22,7 +22,11 @@ function MasterCtrl($scope, $location) {
           case "/dropfile":
             return "Uploadez 2 fichiers et comparer les de manière sémantique";
           case "/github":
-            return "Connectez vous à Github pour comparer des pullRequests";
+            return "Connectez vous à Github pour comparer des Pull Requests";
+          case "/results":
+            return "Le résultat du traitement d'une Pull Request";
+            case "/history":
+              return "L'ensemble de vos Pull Requests déjà traitées";
           default:
             return "";
         }
