@@ -1,4 +1,4 @@
-GithubRepos = new Mongo.Collection("githubrepos");
+GithubRepos = new Mongo.Collection("GithubRepos");
 
 
 if (Meteor.isServer) {

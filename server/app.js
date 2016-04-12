@@ -25,8 +25,8 @@ Meteor.methods({
   traitementFichier: function(idFile1, idFile2){
         var fs = Meteor.npmRequire('fs');
 
-        var filename1 = 'fileUploaded-' + idFile1 + '-' + FileUploaded.findOne({ _id: idFile1}).original.name;
-        var filename2 = 'fileUploaded-' + idFile2 + '-' + FileUploaded.findOne({ _id: idFile2}).original.name;
+        var filename1 = 'FileUploaded-' + idFile1 + '-' + FileUploaded.findOne({ _id: idFile1}).original.name;
+        var filename2 = 'FileUploaded-' + idFile2 + '-' + FileUploaded.findOne({ _id: idFile2}).original.name;
 
         var data1 = fs.readFileSync(Meteor.settings.public.meteor_env + "/prettyPrUpload/" + filename1 , 'utf8');
         var data2 = fs.readFileSync(Meteor.settings.public.meteor_env + "/prettyPrUpload/" + filename2 , 'utf8');
@@ -46,8 +46,6 @@ Meteor.methods({
               "newFile": data2
             }
           });
-
-          console.log(resultPr);
 
           var result = new Object();
           result.changes = new Array();
@@ -72,9 +70,8 @@ Meteor.methods({
 
           result.changes.push(change);
 
-          console.log(result);
-
-
+          //Remove files
+          FileUploaded.remove({});
 
           return result;
 
@@ -84,10 +81,11 @@ Meteor.methods({
 
   },
 
-  traitementPr: function(username, repository, idPr, token){
+  traitementPr: function(username, repository, idPr, token, title, url){
 
     if(!github)
       initGithubApi(token);
+
 
     var oldFiles = [];
     var prFiles = [];
@@ -154,10 +152,10 @@ Meteor.methods({
 
     var result = new Object();
     result.changes = new Array();
-    result.title = "File Uploaded";
+    result.title = title;
     result.id = idPr;
-    result.url = "File Uploaded";
-    result.body = "File Uploaded";
+    result.url = url;
+    result.body = "";
     result.repository = repository;
     result.user = username;
 
@@ -209,6 +207,13 @@ Meteor.methods({
 
       if(!github)
         initGithubApi(token);
+
+      //save token for hook uses
+      GithubUser.upsert({user:Meteor.user().services.github.username}, {$set:{
+        user:Meteor.user().services.github.username,
+        token:token
+      }});
+
 
       var currentPage = 0;
       var repos = null;
@@ -296,6 +301,12 @@ Meteor.methods({
 
     if(!github)
       initGithubApi(token);
+
+    //save token for hook uses
+    GithubUser.upsert({user:Meteor.user().services.github.username}, {$set:{
+      user:Meteor.user().services.github.username,
+      token:token
+    }});
 
     var pullRequests = Async.runSync(function(done) {
       github.pullRequests.getAll({

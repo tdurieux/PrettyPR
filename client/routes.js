@@ -12,7 +12,11 @@ angular.module('prettyPr').config(function ($urlRouterProvider, $stateProvider, 
     .state('results', {
       url: '/results',
       template: '<results></results>'
-    });;
+    })
+    .state('history', {
+      url: '/history',
+      template: '<history></history>'
+    });
 
   $urlRouterProvider.otherwise("/dropfile");
 });
