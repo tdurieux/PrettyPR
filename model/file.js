@@ -1,6 +1,6 @@
 var FileUploadedFS = new FS.Store.FileSystem("fileUploaded", {path: Meteor.settings.public.meteor_env+"/prettyPrUpload"});
 
-FileUploaded = new FS.Collection('fileUploaded', {
+FileUploaded = new FS.Collection('FileUploaded', {
  stores: [FileUploadedFS ]
 });
 
@@ -26,8 +26,6 @@ if (Meteor.isServer) {
     return FileUploaded.find({});
   });
 
-  Meteor.publish('users', function(){
-    return Meteor.users.find({});
-  });
+
 
 }

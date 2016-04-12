@@ -39,11 +39,15 @@ angular.module('prettyPr')
     restrict: 'E',
     templateUrl: 'client/github/github.html',
     controllerAs: 'github',
-    controller: function($scope, $reactive, cfpLoadingBar) {
+    controller: function($scope, $reactive, cfpLoadingBar, $location, sharedProperties) {
       $reactive(this).attach($scope);
 
+      //Subscribe to differents sources to access data
       this.subscribe('users');
+      this.subscribe('GithubRepos');
+      this.subscribe('GithubPr');
 
+      //######################## Vars #############################
       this.repos = new ReactiveArray();
       this.pullRequests = new ReactiveArray();
       this.otherAccount = null;
@@ -51,6 +55,8 @@ angular.module('prettyPr')
       this.reposelected = null;
       this.prselected = null;
       this.currentPageRepo = 0;
+      this.forceRepo = false;
+      this.forcePr = false;
 
       this.helpers({
         showRepos: () => {
@@ -70,17 +76,40 @@ angular.module('prettyPr')
         }
       });
 
+
+      //######################## METHODS #############################
+
+
+      //######## GET REPOS
       this.getRepo = () => {
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
+
         if(!githubUsername)
           return;
 
         var accessToken = Meteor.user().services.github.accessToken;
 
-        this.currentPageRepo = 0;
 
+        this.currentPageRepo = 0;
         cfpLoadingBar.start();
+
+        //Try to get repos from cache
+        var reposCache = GithubRepos.findOne({user:githubUsername});
+
+        if(!this.forceRepo && reposCache){
+          reposCache = reposCache.repos;
+          this.repos.splice(0, this.repos.length);
+          for (var i = 0; i < reposCache.length; i++) {
+            this.repos.push(reposCache[i]);
+            if(i == 0){
+              this.reposelected = reposCache[i].name;
+            }
+          }
+          cfpLoadingBar.complete();
+          bertInfo("Récupération de vos repos réussie !");
+          return;
+        }
 
         Meteor.call('getReposFromUser', githubUsername, accessToken,
           function (error, result) {
@@ -97,12 +126,14 @@ angular.module('prettyPr')
                     this.reposelected = result[i].name;
                   }
                 }
+
                 bertInfo("Récupération de vos repos réussie !");
               }
         }.bind(this));
       }
 
-      this.getPr = (reponame) => {
+      //######## GET PULL REQUESTS
+      this.getPr = () => {
 
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
@@ -110,16 +141,37 @@ angular.module('prettyPr')
         if(!githubUsername)
           return;
 
-        if(!reponame){
+        if(!this.reposelected){
           bertError("Vous n'avez pas sélectionné de repo !");
           return;
         }
 
         var accessToken = Meteor.user().services.github.accessToken;
-
-
         cfpLoadingBar.start();
-        Meteor.call('getPullFromRepo', githubUsername, reponame, accessToken,
+
+        //Try to get pr from cache
+        var prCache = GithubPr.findOne({user:githubUsername, repo: this.reposelected});
+
+        if(!this.forcePr && prCache){
+          prCache = prCache.pullRequests;
+
+          //Remove old
+          this.pullRequests.splice(0, this.pullRequests.length);
+
+          for (var i = 0; i < prCache.length; i++) {
+            this.pullRequests.push(prCache[i]);
+            if(i == 0){
+              this.prselected = prCache[i];
+            }
+          }
+          if(this.pullRequests.length == 0){
+            bertError("Il n'y a aucune pull requests sur ce repository !");
+          }
+          cfpLoadingBar.complete();
+          return;
+        }
+
+        Meteor.call('getPullFromRepo', githubUsername, this.reposelected, accessToken,
           function (error, result) {
               cfpLoadingBar.complete();
               if(error){
@@ -131,7 +183,7 @@ angular.module('prettyPr')
                 for (var i = 0; i < result.length; i++) {
                   this.pullRequests.push(result[i]);
                   if(i == 0){
-                    this.prselected = result[i].title;
+                    this.prselected = result[i];
                   }
                 }
                 if(this.pullRequests.length == 0){
@@ -142,11 +194,47 @@ angular.module('prettyPr')
       }
 
 
+
+      this.compare = () => {
+
+        var pr = JSON.parse(this.prselected);
+
+        var githubUsername = validationUsername(this.userselected,
+          Meteor.user(), this.otherAccount);
+
+        if(!githubUsername)
+          return;
+
+        if(!pr){
+          bertError("Vous n'avez pas sélectionné de pullRequest !");
+          return;
+        }
+
+        cfpLoadingBar.start();
+
+        var accessToken = Meteor.user().services.github.accessToken;
+
+        Meteor.call('traitementPr', githubUsername, this.reposelected, pr.number, accessToken, pr.title, pr.html_url,
+          function (error, result) {
+              cfpLoadingBar.complete();
+              if(error){
+                bertError("Erreur lors de la comparaison. Detail : " + error);
+              } else {
+                //Changement de page en stockant les résultats
+                sharedProperties.setChangement(result);
+                $location.path("/results");
+                $scope.$apply();
+              }
+        }.bind(this));
+
+      };
+
+
       //Le tracker va s'occuper d'appeler la méthode si la valeur de l'user change
       //Celle-ci change si l'user etait deja connecté auparavant à la fin du chargement
       //de la page
       Tracker.autorun(function() {
-        if (Meteor.user() != undefined && Meteor.user().services != undefined ) {
+        if (Meteor.user() != undefined && Meteor.user().services != undefined && $location.path() == "/github" ) {
           this.getRepo();
         }
       }.bind(this));
