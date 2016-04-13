@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="gumtree_spoon_ast_diff_jar">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/gumtree_spoon_ast_diff_jar" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/gumtree_spoon_ast_diff_jar" recursive="false" />
+  </library>
+</component>

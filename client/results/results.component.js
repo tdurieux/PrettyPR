@@ -262,19 +262,62 @@ angular.module('prettyPr')
         }
   };
 }).directive('results', function() {
+  function groupBy(arr, property) {
+    return arr.reduce(function(memo, x) {
+      if (!memo[x.location[property]]) { memo[x.location[property]] = []; }
+      memo[x.location[property]].push(x);
+      return memo;
+    }, {});
+  }
   return {
     restrict: 'E',
     templateUrl: 'client/results/results.html',
     controllerAs: 'results',
-    controller: function($scope, $reactive, cfpLoadingBar, $location, sharedProperties) {
+    controller: function($scope, $reactive, cfpLoadingBar, $location, sharedProperties, $document) {
       $reactive(this).attach($scope);
       this.result = sharedProperties.getChangement();
 
-      if(this.result){
-        this.prettyPR = {
-          "pullrequest": this.result
+      //Attribut pour le bouton menu
+      this.topDirections = ['left', 'up'];
+      this.bottomDirections = ['down', 'right'];
+      this.isOpen = false;
+      this.availableModes = ['md-fling', 'md-scale'];
+      this.selectedMode = 'md-fling';
+      this.availableDirections = ['up', 'down', 'left', 'right'];
+      this.selectedDirection = 'up';
+
+
+      //On va appliquer des identificateurs spéciaux sur les premiers des 3 listes
+      this.rowClass = (item, $index) => {
+        if(item.location.type == "Interface" && $index == 0){
+          return "firstInterface";
+        }
+
+        if(item.location.type == "Class" && $index == 0){
+          return "firstClass";
+        }
+
+        if(item.location.type == "Test" && $index == 0){
+          return "firstTest";
         }
       }
+
+      //méthode pour scroll vers une des 3 catégories
+      this.scroll = (type) => {
+        var element = document.getElementsByClassName(type);
+        if(element.length) {
+          window.scrollTo(0, (element[0].offsetTop) - 100);
+        }
+      }
+
+      //On sépare les changements en 3 listes (class, interface & tests)
+      if(this.result){
+        var changes = groupBy(this.result.changes, "type");
+        this.classes = changes.Class;
+        this.interfaces = changes.Interface;
+        this.tests = changes.Test;
+      }
+
     }
   }
 });

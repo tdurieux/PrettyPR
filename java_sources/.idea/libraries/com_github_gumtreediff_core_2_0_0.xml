@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="com.github.gumtreediff:core:2.0.0" type="repository">
+    <properties maven-id="com.github.gumtreediff:core:2.0.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/core-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/simmetrics-core-3.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guava-18.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/trove4j-3.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/gson-2.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -57,6 +57,7 @@ angular.module('prettyPr')
       this.currentPageRepo = 0;
       this.forceRepo = false;
       this.forcePr = false;
+      this.alreadyRunning = false;
 
       this.helpers({
         showRepos: () => {
@@ -82,6 +83,13 @@ angular.module('prettyPr')
 
       //######## GET REPOS
       this.getRepo = () => {
+
+        //Enlever les appels multiples provoqués par Meteor
+        if(this.alreadyRunning)
+          return;
+
+        this.alreadyRunning = true;
+
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
 
@@ -89,7 +97,6 @@ angular.module('prettyPr')
           return;
 
         var accessToken = Meteor.user().services.github.accessToken;
-
 
         this.currentPageRepo = 0;
         cfpLoadingBar.start();
@@ -102,11 +109,9 @@ angular.module('prettyPr')
           this.repos.splice(0, this.repos.length);
           for (var i = 0; i < reposCache.length; i++) {
             this.repos.push(reposCache[i]);
-            if(i == 0){
-              this.reposelected = reposCache[i].name;
-            }
           }
           cfpLoadingBar.complete();
+          this.alreadyRunning = false;
           bertInfo("Récupération de vos repos réussie !");
           return;
         }
@@ -114,6 +119,7 @@ angular.module('prettyPr')
         Meteor.call('getReposFromUser', githubUsername, accessToken,
           function (error, result) {
               cfpLoadingBar.complete();
+              this.alreadyRunning = false;
               if(error){
                 bertError("Erreur lors de la récupération de vos repos. Detail : " + error);
               } else {
@@ -122,9 +128,6 @@ angular.module('prettyPr')
 
                 for (var i = 0; i < result.length; i++) {
                   this.repos.push(result[i]);
-                  if(i == 0){
-                    this.reposelected = result[i].name;
-                  }
                 }
 
                 bertInfo("Récupération de vos repos réussie !");
@@ -160,9 +163,6 @@ angular.module('prettyPr')
 
           for (var i = 0; i < prCache.length; i++) {
             this.pullRequests.push(prCache[i]);
-            if(i == 0){
-              this.prselected = prCache[i];
-            }
           }
           if(this.pullRequests.length == 0){
             bertError("Il n'y a aucune pull requests sur ce repository !");
@@ -182,9 +182,6 @@ angular.module('prettyPr')
 
                 for (var i = 0; i < result.length; i++) {
                   this.pullRequests.push(result[i]);
-                  if(i == 0){
-                    this.prselected = result[i];
-                  }
                 }
                 if(this.pullRequests.length == 0){
                   bertError("Il n'y a aucune pull requests sur ce repository !");

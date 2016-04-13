@@ -1,9 +1,41 @@
 
 <md-content layout="column" flex>
-  <section ng-repeat="change in results.prettyPR.pullrequest.changes | orderBy:'location.type'">
-    <md-subheader class="md-no-sticky">{{change.location.type}}:
+
+  <section ng-repeat="change in results.classes | orderBy:'location.type'">
+    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
         {{change.location.class?change.location.class:change.location.path}}</md-subheader>
     <diff-class change="change"></diff-class>
-
   </section>
+
+  <section ng-repeat="change in results.interfaces | orderBy:'location.type'">
+    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <diff-class change="change"></diff-class>
+  </section>
+
+  <section ng-repeat="change in results.tests | orderBy:'location.type'">
+    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <diff-class change="change"></diff-class>
+  </section>
+
 </md-content>
+
+<md-fab-speed-dial id="fabResult" md-open="results.isOpen" md-direction="{{results.selectedDirection}}"
+                  ng-class="results.selectedMode">
+  <md-fab-trigger>
+     <md-button aria-label="menu" class="md-fab md-warn">
+        <md-icon class="material-icons">menu</md-icon>
+     </md-button>
+  </md-fab-trigger>
+  <md-fab-actions>
+     <md-button ng-click="results.scroll('firstInterface')" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
+        <md-tooltip md-direction="left">Interfaces</md-tooltip>
+        <md-icon class="material-icons" aria-label="Insert Link">layers</md-icon>
+     </md-button>
+     <md-button ng-click="results.scroll('firstClass')" aria-label="Add" class="md-fab md-raised md-mini md-accent">
+        <md-tooltip md-direction="left">Classes</md-tooltip>
+        <md-icon class="material-icons" aria-label="Add">code</md-icon>
+     </md-button>
+  </md-fab-actions>
+</md-fab-speed-dial>

@@ -1,11 +1,23 @@
 //Peut servir à ajouté des données au démerrage de meteor avec .startup
-
 Meteor.publish('users', function(){
   return Meteor.users.find({});
 });
 
 //Permet à la collection Upload d'accéder au chemin vers les uploads
 Meteor.settings.public.meteor_env = process.env.PWD;
+
+
+//Starting java server
+var exec = Meteor.npmRequire('child_process').exec, child;
+child = exec('/usr/bin/java -jar ' + process.env.PWD + '/server/prettyPR_jar_funct/prettyPR.jar',
+  function (error, stdout, stderr){
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if(error !== null){
+      console.log('exec error: ' + error);
+    }
+});
+
 
 
 //Github hook to catch pull request
