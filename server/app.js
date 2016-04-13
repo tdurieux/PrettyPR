@@ -201,7 +201,6 @@ Meteor.methods({
 
     return result;
 
-  },
 
   getReposFromUser: function (username, token) {
 
@@ -237,7 +236,6 @@ Meteor.methods({
           else
             throw new Meteor.Error(400, reposTemp.error.message);
         }
-
 
         //On a tous les repos de l'utilisateur
         if(reposTemp.result.length % 100 != 0){
