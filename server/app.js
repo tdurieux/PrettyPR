@@ -201,6 +201,7 @@ Meteor.methods({
 
     return result;
 
+  },
 
   getReposFromUser: function (username, token) {
 
