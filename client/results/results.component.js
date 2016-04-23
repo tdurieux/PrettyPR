@@ -310,12 +310,26 @@ angular.module('prettyPr')
         }
       }
 
+      //méthode pour scroll vers la table des matières
+      this.scrollTableMatieres = () => {
+        var element = document.getElementById("table-matieres");
+        window.scrollTo(0, (element.offsetTop));
+      }
+
+      //méthode pour scroll vers le résumé
+      this.scrollResume = () => {
+        var element = document.getElementById("resume");
+        window.scrollTo(0, (element.offsetTop));
+      }
+
       //On sépare les changements en 3 listes (class, interface & tests)
       if(this.result){
         var changes = groupBy(this.result.changes, "type");
         this.classes = changes.Class;
         this.interfaces = changes.Interface;
         this.tests = changes.Test;
+
+        this.scrollResume();
       }
 
     }

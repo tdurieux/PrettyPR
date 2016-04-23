@@ -91,34 +91,54 @@ Meteor.methods({
     var prFiles = [];
     var regex = /(?:\.([^.]+))?$/;
 
-    // Récupération des anciens fichiers sur le repo
-    var contentOldFiles = Async.runSync(function(done) {
-      github.repos.getContent({
+    // Récupération des fichiers original sur le repo grâce aux fichiers de diff
+    var pr_info = Async.runSync(function(done) {
+      github.pullRequests.get({
           user: username,
-          per_page: 100,
-          repo: repository,
-          path: ""
+          number: idPr,
+          repo: repository
       }, function(err, res) {
           done(err, res);
       });
     });
 
-    if(contentOldFiles.error != null){
-      throw new Meteor.Error(400, contentOldFiles.error.message);
-    }
-
-    contentOldFiles.result.forEach(function (contentFile) {
-
-      if(regex.exec(contentFile.name)[1] == "java"){
+    var diffs = HTTP.call( 'GET', pr_info.result.diff_url).content.split("diff --git");
+    diffs.forEach(function (diff){
         var file = new Object();
-        file.path = contentFile.name;
-        file.name = contentFile.name.replace(/^.*[\\\/]/, '');
-        file.content = HTTP.call( 'GET', contentFile.download_url).content;
+
+        file.path = diff.substring(diff.indexOf("a/") + 2, diff.indexOf("b/") - 1);
+        file.name = file.path.replace(/^.*[\\\/]/, '');
+
+        diff = diff.substring(diff.lastIndexOf('@@') + 2, diff.length);
+        diff = diff.replace("-", " ");
+
+        // break the textblock into an array of lines
+        var lines = diff.split('\n');
+
+        //get lines that begins with a +
+        var numbers = [];
+        lines.forEach(function (diff, index){
+            if(diff.substring(0,1) == "+")
+              numbers.push(index);
+        });
+
+        // remove line that begins with a +
+        var counter = 0;
+        numbers.forEach(function (number){
+          lines.splice(number - counter, 1);
+          counter++;
+        });
+
+        // join the array back into a single string
+        diff = lines.join('\n');
+
+        file.content = diff;
 
         oldFiles.push(file);
-      }
     });
 
+    //remove first empty element
+    oldFiles.splice(0,1);
 
     // Récupération des fichiers de la pull request
     var contentPrFiles = Async.runSync(function(done) {
@@ -136,8 +156,6 @@ Meteor.methods({
       throw new Meteor.Error(400, contentPrFiles.error.message);
     }
 
-
-
     contentPrFiles.result.forEach(function (contentFile) {
       if (contentFile.status == 'modified' && regex.exec(contentFile.filename)[1] == "java"){
         var file = new Object();
@@ -149,7 +167,6 @@ Meteor.methods({
     });
 
 
-
     var result = new Object();
     result.changes = new Array();
     result.title = title;
@@ -158,8 +175,6 @@ Meteor.methods({
     result.body = "";
     result.repository = repository;
     result.user = username;
-
-
 
     prFiles.forEach(function (prFile){
 

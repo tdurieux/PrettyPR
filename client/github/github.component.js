@@ -112,7 +112,7 @@ angular.module('prettyPr')
           }
           cfpLoadingBar.complete();
           this.alreadyRunning = false;
-          bertInfo("Récupération de vos repos réussie !");
+          bertInfo("Récupération de vos repos grâce au cache réussie !");
           return;
         }
 

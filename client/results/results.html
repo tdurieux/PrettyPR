@@ -1,41 +1,107 @@
+<div id="resume">
+  <h3> Résumé </h3>   <br/>
+  <p> Titre : {{results.result.title}} </p>
+  <p> Id : {{results.result.id}} </p>
+  <p> Url : <a href="{{results.result.url}}" target="_blank"> {{results.result.url}} </a> </p>
+  <p> Repository : {{results.result.repository}} </p>
+  <p> User : {{results.result.user}} </p>
+</div> <br/>
+
+
+<div id="table-matieres">
+  <h3> Table des matières </h3>   <br/>
+  <h4> Classes : </h4>
+  <md-list>
+    <md-list-item ng-repeat="change in results.classes | orderBy:'location.type'">
+      - <a href="#class-{{change.location.class?change.location.class:change.location.path}}" class="md-list-item-text">{{change.location.class?change.location.class:change.location.path}} </a>
+    </md-list-item>
+  </md-list>
+
+  <h4> Interfaces : </h4>
+  <md-list>
+    <md-list-item ng-repeat="change in results.interfaces | orderBy:'location.type'">
+      - <a href="#interface-{{change.location.class?change.location.class:change.location.path}}" class="md-list-item-text">{{change.location.class?change.location.class:change.location.path}} </a>
+    </md-list-item>
+  </md-list>
+
+  <h4> Tests : </h4>
+  <md-list>
+    <md-list-item ng-repeat="change in results.tests | orderBy:'location.type'">
+      - <a href="#test-{{change.location.class?change.location.class:change.location.path}}" class="md-list-item-text">{{change.location.class?change.location.class:change.location.path}} </a>
+    </md-list-item>
+  </md-list>
+</div>
+
+<br/>
+
+
+<h3> Changements </h3>
 
 <md-content layout="column" flex>
-
   <section ng-repeat="change in results.classes | orderBy:'location.type'">
-    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
-        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <md-subheader id="class-{{change.location.class?change.location.class:change.location.path}}"
+      class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+      {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <button style="float:right;" flex class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="results.scrollTableMatieres()" >
+      <md-tooltip md-direction="left">Retour vers la table des matières</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">list</md-icon>
+      Table des matières
+    </button>
     <diff-class change="change"></diff-class>
   </section>
 
   <section ng-repeat="change in results.interfaces | orderBy:'location.type'">
-    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
-        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <md-subheader id="interface-{{change.location.class?change.location.class:change.location.path}}"
+      class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+      {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <button style="float:right;" flex class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="results.scrollTableMatieres()" >
+      <md-tooltip md-direction="left">Retour vers la table des matières</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">list</md-icon>
+      Table des matières
+    </button>
     <diff-class change="change"></diff-class>
   </section>
 
   <section ng-repeat="change in results.tests | orderBy:'location.type'">
-    <md-subheader class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
-        {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <md-subheader id="test-{{change.location.class?change.location.class:change.location.path}}"
+      class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+      {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <button style="float:right;" flex class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="results.scrollTableMatieres()" >
+      <md-tooltip md-direction="left">Retour vers la table des matières</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">list</md-icon>
+      Table des matières
+    </button>
     <diff-class change="change"></diff-class>
   </section>
-
 </md-content>
 
 <md-fab-speed-dial id="fabResult" md-open="results.isOpen" md-direction="{{results.selectedDirection}}"
-                  ng-class="results.selectedMode">
+ng-class="results.selectedMode">
   <md-fab-trigger>
-     <md-button aria-label="menu" class="md-fab md-warn">
-        <md-icon class="material-icons">menu</md-icon>
-     </md-button>
+    <md-button aria-label="menu" class="md-fab md-warn">
+      <md-icon class="material-icons">menu</md-icon>
+    </md-button>
   </md-fab-trigger>
   <md-fab-actions>
-     <md-button ng-click="results.scroll('firstInterface')" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
-        <md-tooltip md-direction="left">Interfaces</md-tooltip>
-        <md-icon class="material-icons" aria-label="Insert Link">layers</md-icon>
-     </md-button>
-     <md-button ng-click="results.scroll('firstClass')" aria-label="Add" class="md-fab md-raised md-mini md-accent">
-        <md-tooltip md-direction="left">Classes</md-tooltip>
-        <md-icon class="material-icons" aria-label="Add">code</md-icon>
-     </md-button>
+    <!--<md-button ng-click="results.scroll('firstTest')" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
+      <md-tooltip md-direction="left">Tests</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">assignment</md-icon>
+    </md-button>
+    <md-button ng-click="results.scroll('firstInterface')" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
+      <md-tooltip md-direction="left">Interfaces</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">layers</md-icon>
+    </md-button>
+    <md-button ng-click="results.scroll('firstClass')" aria-label="Add" class="md-fab md-raised md-mini md-accent">
+      <md-tooltip md-direction="left">Classes</md-tooltip>
+      <md-icon class="material-icons" aria-label="Add">code</md-icon>
+    </md-button>-->
+    <md-button ng-click="results.scrollTableMatieres()" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
+      <md-tooltip md-direction="left">Tables des matières</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">list</md-icon>
+    </md-button>
+    <md-button ng-click="results.scrollResume()" aria-label="Insert Link" class="md-fab md-raised md-mini md-accent">
+      <md-tooltip md-direction="left">Résumé</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">speaker_notes</md-icon>
+    </md-button>
   </md-fab-actions>
 </md-fab-speed-dial>
