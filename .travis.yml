@@ -7,7 +7,7 @@ before_install:
   - "git submodule update --init --recursive"
   - "phantomjs --webdriver=9515 &"
 node_js:
-  - "0.12"
+  - "6.0.0"
 install:
   - "curl https://install.meteor.com | /bin/sh"
   - "nvm install stable"
