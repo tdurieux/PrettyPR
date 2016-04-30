@@ -30,6 +30,13 @@
       - <a href="#test-{{change.location.class?change.location.class:change.location.path}}" class="md-list-item-text">{{change.location.class?change.location.class:change.location.path}} </a>
     </md-list-item>
   </md-list>
+
+  <h4> Autres fichiers (non java) : </h4>
+  <md-list>
+    <md-list-item ng-repeat="change in results.others | orderBy:'location.type'">
+      - <a href="#other-{{change.location.class?change.location.class:change.location.path}}" class="md-list-item-text">{{change.location.class?change.location.class:change.location.path}} </a>
+    </md-list-item>
+  </md-list>
 </div>
 
 <br/>
@@ -72,6 +79,18 @@
       Table des matières
     </button>
     <diff-class change="change"></diff-class>
+  </section>
+
+  <section ng-repeat="change in results.others | orderBy:'location.type'">
+    <md-subheader id="other-{{change.location.class?change.location.class:change.location.path}}"
+      class="md-no-sticky" ng-class='results.rowClass(change, $index)'>{{change.location.type}}:
+      {{change.location.class?change.location.class:change.location.path}}</md-subheader>
+    <button style="float:right;" flex class="md-raised md-primary md-button md-ink-ripple" type="button" ng-click="results.scrollTableMatieres()" >
+      <md-tooltip md-direction="left">Retour vers la table des matières</md-tooltip>
+      <md-icon class="material-icons" aria-label="Insert Link">list</md-icon>
+      Table des matières
+    </button>
+    <diff-other change="change"></diff-other>
   </section>
 </md-content>
 

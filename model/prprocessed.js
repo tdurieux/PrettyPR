@@ -1,4 +1,4 @@
-PrProcessed = new Mongo.Collection("PrProcessed");
+PrProcessed = new Mongo.Collection("prprocessed");
 
 
 if (Meteor.isServer) {
@@ -16,7 +16,7 @@ if (Meteor.isServer) {
   });
 
 
-  Meteor.publish('PrProcessed', function() {
+  Meteor.publish('prprocessed', function() {
     return PrProcessed.find({});
   });
 

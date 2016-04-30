@@ -261,6 +261,38 @@ angular.module('prettyPr')
             }
         }
   };
+}).directive("diffOther", function ($compile, $http) {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: {
+      change: '=change'
+    },
+    link: function (scope, element, attrs) {
+
+      console.log(scope.change.actions);
+
+      var div = document.createElement('div');
+
+      // build the diff view and add it to the current DOM
+      div.appendChild(diffview.buildView({
+          baseTextLines: scope.change.oldFile,
+          newTextLines: scope.change.newFile,
+          opcodes: scope.change.actions,
+          // set the display titles for each resource
+          baseTextName: "Base Text",
+          newTextName: "New Text",
+          contextSize: null,
+          viewType: 0
+      }));
+
+      element.append(div);
+
+
+
+    }
+
+  }
 }).directive('results', function() {
   function groupBy(arr, property) {
     return arr.reduce(function(memo, x) {
@@ -328,6 +360,7 @@ angular.module('prettyPr')
         this.classes = changes.Class;
         this.interfaces = changes.Interface;
         this.tests = changes.Test;
+        this.others = changes.Other;
 
         this.scrollResume();
       }

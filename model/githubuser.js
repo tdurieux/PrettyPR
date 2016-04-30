@@ -1,4 +1,4 @@
-GithubUser = new Mongo.Collection("GithubUser");
+GithubUser = new Mongo.Collection("githubUser");
 
 
 if (Meteor.isServer) {
@@ -16,7 +16,7 @@ if (Meteor.isServer) {
 
   });
 
-  Meteor.publish('GithubUser', function() {
+  Meteor.publish('githubUser', function() {
     return GithubUser.find({});
   });
 

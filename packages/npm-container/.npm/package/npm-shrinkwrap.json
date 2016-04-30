@@ -39,7 +39,7 @@
     "oauth": {
       "version": "0.9.14",
       "resolved": "https://registry.npmjs.org/oauth/-/oauth-0.9.14.tgz",
-      "from": "https://registry.npmjs.org/oauth/-/oauth-0.9.14.tgz"
+      "from": "oauth@0.9.14"
     },
     "redis": {
       "version": "0.8.2",

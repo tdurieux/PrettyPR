@@ -86,12 +86,12 @@ Meteor.methods({
     if(!github)
       initGithubApi(token);
 
-
     var oldFiles = [];
     var prFiles = [];
+    var otherFiles = [];
     var regex = /(?:\.([^.]+))?$/;
 
-    // Récupération des fichiers original sur le repo grâce aux fichiers de diff
+    //Get Pull Request info
     var pr_info = Async.runSync(function(done) {
       github.pullRequests.get({
           user: username,
@@ -102,6 +102,7 @@ Meteor.methods({
       });
     });
 
+    //Negate the diff file to get original file instead of downloading each file
     var diffs = HTTP.call( 'GET', pr_info.result.diff_url).content.split("diff --git");
     diffs.forEach(function (diff){
         var file = new Object();
@@ -137,32 +138,64 @@ Meteor.methods({
         oldFiles.push(file);
     });
 
-    //remove first empty element
+    //Remove first empty element created by split
     oldFiles.splice(0,1);
 
-    // Récupération des fichiers de la pull request
-    var contentPrFiles = Async.runSync(function(done) {
-      github.pullRequests.getFiles({
-          user: username,
-          per_page: 100,
-          repo: repository,
-          number: idPr
-      }, function(err, res) {
-          done(err, res);
+    //Get Pull Request File
+    //Loop to get more than 100 files
+    var contentPrFiles;
+    var currentPage = 0;
+    while(true){
+      var contentPrFilesTemp = Async.runSync(function(done) {
+        github.pullRequests.getFiles({
+            user: username,
+            per_page: 100,
+            repo: repository,
+            number: idPr,
+            page : currentPage
+        }, function(err, res) {
+            done(err, res);
+        });
       });
-    });
 
-    if(contentPrFiles.error != null){
-      throw new Meteor.Error(400, contentPrFiles.error.message);
+      if(contentPrFilesTemp.error != null){
+        throw new Meteor.Error(400, contentPrFilesTemp.error.message);
+      }
+
+      //Its ok we get all files
+      if(contentPrFilesTemp.result.length % 100 != 0) {
+        if(!contentPrFiles)
+          contentPrFiles = contentPrFilesTemp;
+        break;
+      }
+      //Going to next page and save elements in final variable
+      else {
+        currentPage++;
+        if(!contentPrFiles)
+          contentPrFiles = contentPrFilesTemp;
+        else {
+          contentPrFiles.result = contentPrFiles.result.concat(contentPrFilesTemp.result);
+        }
+      }
     }
 
+    //Download modified files
     contentPrFiles.result.forEach(function (contentFile) {
-      if (contentFile.status == 'modified' && regex.exec(contentFile.filename)[1] == "java"){
-        var file = new Object();
-        file.path = contentFile.filename;
-        file.name = contentFile.filename.replace(/^.*[\\\/]/, '');
-        file.content = HTTP.call( 'GET', contentFile.raw_url).content;
-        prFiles.push(file);
+      if (contentFile.status == 'modified'){
+
+        if(regex.exec(contentFile.filename)[1] == "java"){
+          var file = new Object();
+          file.path = contentFile.filename;
+          file.name = contentFile.filename.replace(/^.*[\\\/]/, '');
+          file.content = HTTP.call( 'GET', contentFile.raw_url).content;
+          prFiles.push(file);
+        } else {
+          var file = new Object();
+          file.path = contentFile.filename;
+          file.name = contentFile.filename.replace(/^.*[\\\/]/, '');
+          file.content = HTTP.call( 'GET', contentFile.raw_url).content;
+          otherFiles.push(file);
+        }
       }
     });
 
@@ -176,10 +209,9 @@ Meteor.methods({
     result.repository = repository;
     result.user = username;
 
+    //PrettyPr on Java Modified file
     prFiles.forEach(function (prFile){
-
       oldFiles.forEach(function (oldFile){
-
         if(oldFile.name == prFile.name){
 
           var resultPr =  HTTP.call( 'POST', 'http://localhost:8080/api/prettypr', {
@@ -192,8 +224,8 @@ Meteor.methods({
           });
 
           var change = new Object();
-          change.oldFile = oldFile.content;
           change.newFile = prFile.content;
+          change.oldFile = oldFile.content;
           change.actions = resultPr.data.actions;
 
           change.location = new Object();
@@ -208,10 +240,38 @@ Meteor.methods({
             change.location.type = "Test";
 
           result.changes.push(change);
-
         }
-
       });
+    });
+
+    //Simple diff on Other Modified file
+    otherFiles.forEach(function (otherFile){
+        oldFiles.forEach(function (oldFile){
+          if(otherFile.name == oldFile.name){
+
+            var base = difflib.stringAsLines(oldFile.content);
+            var newtxt = difflib.stringAsLines(otherFile.content);
+
+            // create a SequenceMatcher instance that diffs the two sets of lines
+            sm = new difflib.SequenceMatcher(base, newtxt);
+  		      var resultPr = sm.get_opcodes();
+
+
+            var change = new Object();
+            change.oldFile = base;
+            change.newFile = newtxt;
+            change.actions = resultPr;
+
+            change.location = new Object();
+            change.location.path = otherFile.path;
+            change.location.class = otherFile.name.replace(/\.[^/.]+$/, "");
+
+            change.location.type = "Other";
+
+            result.changes.push(change);
+
+          }
+        });
     });
 
     return result;
@@ -293,7 +353,8 @@ Meteor.methods({
     var pullRequests = Async.runSync(function(done) {
       github.pullRequests.getAll({
           user: username,
-          repo: reponame
+          repo: reponame,
+          per_page: 100
       }, function(err, res) {
           done(err, res);
       });

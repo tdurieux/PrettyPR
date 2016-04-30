@@ -1,4 +1,4 @@
-GithubRepos = new Mongo.Collection("GithubRepos");
+GithubRepos = new Mongo.Collection("githubRepos");
 
 
 if (Meteor.isServer) {
@@ -16,7 +16,7 @@ if (Meteor.isServer) {
   });
 
 
-  Meteor.publish('GithubRepos', function() {
+  Meteor.publish('githubRepos', function() {
     return GithubRepos.find({});
   });
 

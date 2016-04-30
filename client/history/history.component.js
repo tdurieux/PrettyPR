@@ -4,11 +4,11 @@ angular.module('prettyPr').directive('history', function() {
     templateUrl: 'client/history/history.html',
     controllerAs: 'history',
     controller: function($scope, $reactive, $location, sharedProperties) {
-
       $reactive(this).attach($scope);
+
       //Subscribe to differents sources to access data
       this.subscribe('users');
-      this.subscribe('PrProcessed');
+      this.subscribe('prprocessed');
 
       this.showPr = (url) => {
         if(!url){

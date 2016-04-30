@@ -43,9 +43,9 @@ angular.module('prettyPr')
       $reactive(this).attach($scope);
 
       //Subscribe to differents sources to access data
-      this.subscribe('users');
-      this.subscribe('GithubRepos');
-      this.subscribe('GithubPr');
+      this.subscribe('users').ready();
+      this.subscribe('githubRepos').ready();
+      this.subscribe('githubPr').ready();
 
       //######################## Vars #############################
       this.repos = new ReactiveArray();
@@ -84,12 +84,6 @@ angular.module('prettyPr')
       //######## GET REPOS
       this.getRepo = () => {
 
-        //Enlever les appels multiples provoqués par Meteor
-        if(this.alreadyRunning)
-          return;
-
-        this.alreadyRunning = true;
-
         var githubUsername = validationUsername(this.userselected,
           Meteor.user(), this.otherAccount);
 
@@ -104,6 +98,9 @@ angular.module('prettyPr')
         //Try to get repos from cache
         var reposCache = GithubRepos.findOne({user:githubUsername});
 
+        console.log(githubUsername);
+        console.log(reposCache);
+
         if(!this.forceRepo && reposCache){
           reposCache = reposCache.repos;
           this.repos.splice(0, this.repos.length);
@@ -111,7 +108,6 @@ angular.module('prettyPr')
             this.repos.push(reposCache[i]);
           }
           cfpLoadingBar.complete();
-          this.alreadyRunning = false;
           bertInfo("Récupération de vos repos grâce au cache réussie !");
           return;
         }
@@ -119,7 +115,6 @@ angular.module('prettyPr')
         Meteor.call('getReposFromUser', githubUsername, accessToken,
           function (error, result) {
               cfpLoadingBar.complete();
-              this.alreadyRunning = false;
               if(error){
                 bertError("Erreur lors de la récupération de vos repos. Detail : " + error);
               } else {
@@ -231,7 +226,9 @@ angular.module('prettyPr')
       //Celle-ci change si l'user etait deja connecté auparavant à la fin du chargement
       //de la page
       Tracker.autorun(function() {
-        if (Meteor.user() != undefined && Meteor.user().services != undefined && $location.path() == "/github" ) {
+        if (Meteor.user() != undefined && Meteor.user().services != undefined && $location.path() == "/github" && !this.alreadyRunning) {
+          //On ne va lancer l'autorun qu'une seule fois
+          this.alreadyRunning = true;
           this.getRepo();
         }
       }.bind(this));
