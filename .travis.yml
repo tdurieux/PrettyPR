@@ -6,8 +6,18 @@ before_install:
   - sleep 3 # give xvfb some time to start
   - "git submodule update --init --recursive"
   - "phantomjs --webdriver=9515 &"
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
 node_js:
-  - "6.0.0"
+  - "6"
+  - "5"
+  - "0.12"
 install:
   - "curl https://install.meteor.com | /bin/sh"
   - "nvm install stable"
