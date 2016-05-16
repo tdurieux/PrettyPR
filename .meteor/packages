@@ -41,3 +41,7 @@ codelovers:angular-loading-bar
 http
 standard-minifier-css
 standard-minifier-js
+practicalmeteor:mocha
+xolvio:cleaner
+angular:angular-mocks
+modules

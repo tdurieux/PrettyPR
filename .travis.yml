@@ -1,42 +1,13 @@
-sudo: required
+sudo: false
+
 language: node_js
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - "wget https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip"
-  - "unzip chromedriver_linux64.zip"
-  - "./chromedriver &"
-  - sleep 3 # give xvfb some time to start
-  - "git submodule update --init --recursive"
-  - "phantomjs --webdriver=9515 &"
-env:
-  - CXX=g++-4.8
-dependencies:
-  post:
-    # install chromedriver
-    - wget https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip
-    - unzip chromedriver_linux64.zip
-    # run chromedriver
-    - ./chromedriver:
-        background: true
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
+
 node_js:
-  - "6"
-  - "5"
-  - "0.12"
-install:
+  - "0.10.41"
+
+before_install:
   - "curl https://install.meteor.com | /bin/sh"
-  - "nvm install stable"
-  - "nvm use stable"
-  - "npm install -g gagarin"
-services:
-  - mongodb
-script:
-  - gagarin -v
-notifications:
-  slack: lille:CUlWQvK55OmTyg7Uqs8HQuAI
+  - "npm install -g spacejam"
+  - export PATH="$HOME/.meteor:$PATH"
+
+script: "spacejam test-packages ./"

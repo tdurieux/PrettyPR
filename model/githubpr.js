@@ -1,4 +1,4 @@
-GithubPr = new Mongo.Collection("githubPr");
+export const GithubPr = new Mongo.Collection("githubPr");
 
 
 if (Meteor.isServer) {

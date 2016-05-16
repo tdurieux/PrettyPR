@@ -1,6 +1,6 @@
 var FileUploadedFS = new FS.Store.FileSystem("filesystem", {path: Meteor.settings.public.meteor_env+"/prettyPrUpload"});
 
-FileUploaded = new FS.Collection('fileuploaded', {
+export const FileUploaded = new FS.Collection('fileuploaded', {
  stores: [FileUploadedFS ]
 });
 

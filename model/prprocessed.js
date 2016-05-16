@@ -1,4 +1,4 @@
-PrProcessed = new Mongo.Collection("prprocessed");
+export const PrProcessed = new Mongo.Collection("prprocessed");
 
 
 if (Meteor.isServer) {
