@@ -1,4 +1,7 @@
-export const PrProcessed = new Mongo.Collection("prprocessed");
+
+PrProcessed = new Mongo.Collection("prprocessed");
+
+export const PrProcessedCollection = PrProcessed;
 
 
 if (Meteor.isServer) {

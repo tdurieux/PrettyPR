@@ -98,9 +98,6 @@ angular.module('prettyPr')
         //Try to get repos from cache
         var reposCache = GithubRepos.findOne({user:githubUsername});
 
-        console.log(githubUsername);
-        console.log(reposCache);
-
         if(!this.forceRepo && reposCache){
           reposCache = reposCache.repos;
           this.repos.splice(0, this.repos.length);

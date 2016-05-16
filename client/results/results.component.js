@@ -270,8 +270,6 @@ angular.module('prettyPr')
     },
     link: function (scope, element, attrs) {
 
-      console.log(scope.change.actions);
-
       var div = document.createElement('div');
 
       // build the diff view and add it to the current DOM

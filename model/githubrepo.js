@@ -1,5 +1,8 @@
-export const GithubRepos = new Mongo.Collection("githubRepos");
 
+GithubRepos = new Mongo.Collection("githubRepos");
+
+//ForTest
+export const GithubReposCollection = GithubRepos;
 
 if (Meteor.isServer) {
 
