@@ -16,13 +16,28 @@ function MasterCtrl($scope, $location) {
       path = path.charAt(0).toUpperCase() + path.slice(1);
       return path;
     }
+
     $scope.descriptionCurrent = function(){
         switch ($location.path()) {
           case "/dropfile":
-            return "Uploader 2 fichiers et comparer les de manière sémantique";
+            return "Uploadez 2 fichiers et comparer les de manière sémantique";
+          case "/github":
+            return "Connectez vous à Github pour comparer des Pull Requests";
+          case "/results":
+            return "Le résultat du traitement d'une Pull Request";
+            case "/history":
+              return "L'ensemble de vos Pull Requests déjà traitées";
           default:
             return "";
         }
+    }
+
+    $scope.getClass = function (path) {
+      if ($location.path().substr(0, path.length) === path) {
+        return 'active-menu';
+      } else {
+        return '';
+      }
     }
 
     $scope.getWidth = function() {

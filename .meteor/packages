@@ -11,7 +11,6 @@ session                 # Client-side reactive dictionary for your app
 jquery                  # Helpful client-side library
 tracker                 # Meteor's client-side reactive programming library
 
-standard-minifiers      # JS/CSS minifiers run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 
 angular
@@ -27,7 +26,6 @@ angular:angular-material
 planettraining:material-design-icons
 danialfarid:ng-file-upload
 cfs:filesystem
-twbs:bootstrap
 fortawesome:fontawesome
 themeteorchef:bert
 angular:angular-animate
@@ -39,3 +37,11 @@ meteorhacks:npm
 
 npm-container
 manuel:reactivearray
+codelovers:angular-loading-bar
+http
+standard-minifier-css
+standard-minifier-js
+practicalmeteor:mocha
+xolvio:cleaner
+angular:angular-mocks
+modules

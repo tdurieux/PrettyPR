@@ -1,0 +1,13 @@
+<div ng-if="history.pullRequest.length != 0">
+  <h3 class="ng-binding">Vos pullRequests traitées grâce au hook de Github : </h3>
+  <md-list-item ng-repeat="pullRequest in history.pullRequests">
+    <div>
+        {{ pullRequest.result.repository }}
+        - {{ pullRequest.result.title }}
+        - <a href="{{ pullRequest.result.url }}" target="_blank"> {{ pullRequest.result.url }} </a>
+        <button class="md-primary md-button" type="button" ng-click="history.showPr(pullRequest.result.url)">Visualiser</button>
+    </div>
+  </md-list-item>
+</div>
+
+<div ng-if="history.pullRequest.length == 0"> Vous n'avez pas de Pull Request enregistrées</div>

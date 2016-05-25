@@ -1,10 +1,50 @@
 {
   "dependencies": {
     "github": {
-      "version": "0.1.8"
+      "version": "0.1.8",
+      "resolved": "https://registry.npmjs.org/github/-/github-0.1.8.tgz",
+      "from": "https://registry.npmjs.org/github/-/github-0.1.8.tgz"
+    },
+    "githubhook": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/githubhook/-/githubhook-1.4.0.tgz",
+      "from": "https://registry.npmjs.org/githubhook/-/githubhook-1.4.0.tgz",
+      "dependencies": {
+        "docopt": {
+          "version": "0.6.2",
+          "resolved": "https://registry.npmjs.org/docopt/-/docopt-0.6.2.tgz",
+          "from": "https://registry.npmjs.org/docopt/-/docopt-0.6.2.tgz"
+        },
+        "multiline": {
+          "version": "1.0.2",
+          "resolved": "https://registry.npmjs.org/multiline/-/multiline-1.0.2.tgz",
+          "from": "https://registry.npmjs.org/multiline/-/multiline-1.0.2.tgz",
+          "dependencies": {
+            "strip-indent": {
+              "version": "1.0.1",
+              "resolved": "https://registry.npmjs.org/strip-indent/-/strip-indent-1.0.1.tgz",
+              "from": "https://registry.npmjs.org/strip-indent/-/strip-indent-1.0.1.tgz",
+              "dependencies": {
+                "get-stdin": {
+                  "version": "4.0.1",
+                  "resolved": "https://registry.npmjs.org/get-stdin/-/get-stdin-4.0.1.tgz",
+                  "from": "https://registry.npmjs.org/get-stdin/-/get-stdin-4.0.1.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "oauth": {
+      "version": "0.9.14",
+      "resolved": "https://registry.npmjs.org/oauth/-/oauth-0.9.14.tgz",
+      "from": "oauth@0.9.14"
     },
     "redis": {
-      "version": "0.8.2"
+      "version": "0.8.2",
+      "resolved": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz",
+      "from": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz"
     }
   }
 }
